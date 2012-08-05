@@ -10,7 +10,6 @@ package de.christophjobst.converter;
 
 import generated.Quiz;
 import de.christophjobst.main.RandomIdentifierGenerator;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock;
@@ -19,7 +18,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Categor
 
 public class MultichoiceToMcConverter {
 
-	public static ComplexTaskDef processing(ComplexTaskDef complexTaskDef,
+	public static McTaskBlock processing(
 			Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
@@ -96,14 +95,8 @@ public class MultichoiceToMcConverter {
 				
 			}
 		}
-
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(mcTaskBlock);
-
 		
-		
-		return complexTaskDef;
+		return mcTaskBlock;
 	}
 
 }

@@ -10,15 +10,13 @@ package de.christophjobst.converter;
 
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.TextTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.TextSubTaskDef;
 import generated.Quiz;
 
 public class ShortanswerToTextConverter {
 
-	public static ComplexTaskDef processing(ComplexTaskDef complexTaskDef,
-			Quiz quizsammlung) {
+	public static TextTaskBlock processing(Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
@@ -65,12 +63,7 @@ public class ShortanswerToTextConverter {
 
 			}
 		}
-
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(textTaskBlock);
-
-		return complexTaskDef;
+		return textTaskBlock;
 	}
 
 }

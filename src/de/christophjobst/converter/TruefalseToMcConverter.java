@@ -19,8 +19,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Categor
 
 public class TruefalseToMcConverter {
 
-	public static ComplexTaskDef processing(ComplexTaskDef complexTaskDef,
-			Quiz quizsammlung) {
+	public static McTaskBlock processing(Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
@@ -92,11 +91,7 @@ public class TruefalseToMcConverter {
 			}
 		}
 
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(mcTaskBlock);
-
-		return complexTaskDef;
+		return mcTaskBlock;
 	}
 
 }

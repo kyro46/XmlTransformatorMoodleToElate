@@ -14,7 +14,6 @@ import generated.Quiz;
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef.Cloze;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef.Cloze.Gap;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock;
@@ -22,8 +21,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Categor
 
 public class ClozeToClozeConverter {
 
-	public static ComplexTaskDef processing(ComplexTaskDef complexTaskDef,
-			Quiz quizsammlung) {
+	public static ClozeTaskBlock processing(Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
@@ -94,11 +92,7 @@ public class ClozeToClozeConverter {
 			}
 		}
 
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(clozeTaskBlock);
-
-		return complexTaskDef;
+		return clozeTaskBlock;
 	}
 
 	private static List<String> clozeAufloeser(String moodletext) {

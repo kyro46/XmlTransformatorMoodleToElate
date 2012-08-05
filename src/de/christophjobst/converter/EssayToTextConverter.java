@@ -10,15 +10,13 @@ package de.christophjobst.converter;
 
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.TextTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.TextSubTaskDef;
 import generated.Quiz;
 
 public class EssayToTextConverter {
 
-	public static ComplexTaskDef processing(ComplexTaskDef complexTaskDef,
-			Quiz quizsammlung) {
+	public static TextTaskBlock processing(Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
@@ -37,13 +35,13 @@ public class EssayToTextConverter {
 					.equals("essay")) {
 				System.out.println("Es ist ein essay, Indexnummer: " + i);
 
-
 				subTask.setProblem(quizsammlung.getQuestion().get(i)
 						.getQuestiontext().getText().toString());
 				subTask.setTrash(false);
 				subTask.setInteractiveFeedback(false);
 				subTask.setId(quizsammlung.getQuestion().get(i).getName()
-						.getText().toString() + "_" + rand.getRandomID());
+						.getText().toString()
+						+ "_" + rand.getRandomID());
 
 				textTaskBlock.getTextSubTaskDefOrChoice().add(subTask);
 
@@ -52,13 +50,7 @@ public class EssayToTextConverter {
 			}
 		}
 
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(textTaskBlock);
-		
-
-		
-		return complexTaskDef;
+		return textTaskBlock;
 	}
 
 }

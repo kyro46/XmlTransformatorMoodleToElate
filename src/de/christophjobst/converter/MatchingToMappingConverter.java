@@ -13,7 +13,6 @@ import java.util.*;
 import generated.Quiz;
 
 import de.christophjobst.main.RandomIdentifierGenerator;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.MappingTaskBlock;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.MappingTaskBlock.MappingConfig;
 import de.thorstenberger.taskmodel.complex.complextaskdef.MappingSubTaskDef.Concept;
@@ -23,7 +22,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.MappingSubTaskDef;
 
 public class MatchingToMappingConverter {
 
-	public static ComplexTaskDef processing(ComplexTaskDef complexTaskDef,
+	public static MappingTaskBlock processing(
 			Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
@@ -124,11 +123,7 @@ public class MatchingToMappingConverter {
 			}
 		}
 
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(mappingTaskBlock);
-
-		return complexTaskDef;
+		return mappingTaskBlock;
 	}
 
 }
