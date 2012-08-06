@@ -92,12 +92,14 @@ public class MatchingToMappingConverter {
 							.getSubquestion().get(j).getAnswer().getText());
 				}
 
+				List<Assignment> assignmentObjectList = new ArrayList<MappingSubTaskDef.Assignment>(); 
+								
 				List<String> assingmentIDList = new ArrayList<String>();
 				for (int j = 0; j < assignmentList.toArray().length; j++) {
 					assingmentIDList.add(rand.getRandomID());
 					assignment.setId(assingmentIDList.get(j));
 					assignment.setName(assignmentList.get(j));
-					subTask.getAssignment().add(assignment);
+					assignmentObjectList.add(assignment);
 					assignment = new Assignment();
 				}
 
@@ -117,6 +119,16 @@ public class MatchingToMappingConverter {
 					concept = new Concept();
 				}
 
+				//Assignments zufällig anordnen
+				Collections.shuffle(assignmentObjectList);
+
+				//Assignemntobjekte der SubTask zuordnen
+				for (int j = 0; j < assignmentObjectList.toArray().length; j++) {
+				subTask.getAssignment().add(assignmentObjectList.get(j));
+				}
+
+				
+				
 				mappingTaskBlock.getMappingSubTaskDefOrChoice().add(subTask);
 
 				subTask = new MappingSubTaskDef();

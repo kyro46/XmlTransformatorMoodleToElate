@@ -1,14 +1,16 @@
-Transformator für aus Moodle exportierte Übungsfragen in das von ElateXam genutzte XML-Format.
+# elateXam - Moodle-XML to elateXam-XML Converter #
 
-Unterstützte Fragetypen:
--cloze
--multichoice
--truefalse
--essay
--shortanswer
--matching
+Transformator für aus Moodle exportierte Übungsfragen in das von ElateXam genutzte XML-Format (complexTaskDef.xsd).
 
-Der volle Konfigurationsumfang von Moodle wird nicht unterstützt.
+Unterstützte Fragetypen aus Moodle:
+* cloze
+* multichoice
+* truefalse
+* essay
+* shortanswer
+* matching
+
+Der volle Konfigurationsumfang von Moodlefragen wird nicht unterstützt.
 
 Nutzung:
 Moodle-XML-Dateipfad als Startparameter übergeben

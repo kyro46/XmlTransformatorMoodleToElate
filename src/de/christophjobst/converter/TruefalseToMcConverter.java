@@ -10,7 +10,6 @@ package de.christophjobst.converter;
 
 import generated.Quiz;
 import de.christophjobst.main.RandomIdentifierGenerator;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.McSubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock;

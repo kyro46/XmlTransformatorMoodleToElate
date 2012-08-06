@@ -5,9 +5,10 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
- *TODO Umlaute korrigieren
- *TODO Inputverteilerschleife anpassen und Converterschleifen entfernen
- *TODO ComplexTaskDef-Category-Blöcke erschaffen, gem. category-Blöcken in Moodle-XML
+ * TODO Lückentext erstes Zeichen, letztes Zeichen
+ * TODO Umlaute korrigieren
+ * TODO Inputverteilerschleife anpassen und Converterschleifen entfernen
+ * TODO ComplexTaskDef-Category-Blöcke erschaffen, gem. category-Blöcken in Moodle-XML
  */
 
 package de.christophjobst.main;
@@ -29,7 +30,7 @@ import javax.xml.bind.Unmarshaller;
 
 public class ElateXMLMain {
 
-	// private static final String QUIZ_XML = "./roma2.xml";
+	//private static final String QUIZ_XML = "./roma2.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
@@ -54,6 +55,7 @@ public class ElateXMLMain {
 		// DebuggingAusgabe.printQuestionsTypeAndAnswer(quizsammlung);
 		// DebuggingAusgabe.printExistingComplexTaskDefCategoryblocks(complexTaskDef);
 
+		
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
 		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
 
