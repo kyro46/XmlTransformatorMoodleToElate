@@ -10,43 +10,23 @@ package de.christophjobst.converter;
 
 import java.util.*;
 
-import generated.Quiz;
+import generated.Quiz.Question;
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef.Cloze;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef.Cloze.Gap;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock.ClozeConfig;
 
 public class ClozeToClozeConverter {
 
-	public static ClozeTaskBlock processing(Quiz quizsammlung) {
+	public static ClozeSubTaskDef processing(Question question) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		ClozeSubTaskDef subTask = new ClozeSubTaskDef();
-		ClozeTaskBlock clozeTaskBlock = new ClozeTaskBlock();
 
-		Config clozeTaskConfig = new Config();
-		clozeTaskConfig.setNoOfSelectedTasks(1);
-		clozeTaskConfig.setPointsPerTask(5);// TODO Punkte = Anzahl der Lücken -
-											// inkonsistent, da in
-											// Frageinstanzen nicht einheitlich
-											// viele Lücken
-		clozeTaskConfig.setPreserveOrder(false);
-		clozeTaskBlock.setConfig(clozeTaskConfig);
-
-		ClozeConfig clozeConfig = new ClozeConfig();
-		clozeConfig.setIgnoreCase(true);
-		clozeConfig.setNegativePoints(0);
-		clozeTaskBlock.setClozeConfig(clozeConfig);
-
-		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
-
-			if (quizsammlung.getQuestion().get(i).getType().toString()
+			if (question.getType().toString()
 					.equals("cloze")) {
-				System.out.println("Es ist ein cloze, Indexnummer: " + i);
+				System.out.println("Es ist ein cloze.");
 
 				// Allgemeine Angaben pro Frage
 				subTask.setTrash(false);
@@ -55,7 +35,7 @@ public class ClozeToClozeConverter {
 				subTask.setHint(" ");
 
 				// Spezielle Angaben pro Frage
-				subTask.setId(quizsammlung.getQuestion().get(i).getName()
+				subTask.setId(question.getName()
 						.getText().toString()
 						+ "_" + rand.getRandomID());
 
@@ -64,7 +44,7 @@ public class ClozeToClozeConverter {
 				// Stringoperationen, um die in die Aufgabenstellung
 				// eingebetteten Lösungsphrasen der Lücken zu extrahieren
 				List<String> list = new ArrayList<String>();
-				list = clozeAufloeser(quizsammlung.getQuestion().get(i)
+				list = clozeAufloeser(question
 						.getQuestiontext().getText());
 
 				// Schleife um die Stringfelder den Text und Gap-Elementen
@@ -85,14 +65,11 @@ public class ClozeToClozeConverter {
 
 				subTask.setCloze(cloze);
 
-				clozeTaskBlock.getClozeSubTaskDefOrChoice().add(subTask);
-
 				list = new ArrayList<String>();
-				subTask = new ClozeSubTaskDef();
+				
 			}
-		}
 
-		return clozeTaskBlock;
+		return subTask;
 	}
 
 	private static List<String> clozeAufloeser(String moodletext) {

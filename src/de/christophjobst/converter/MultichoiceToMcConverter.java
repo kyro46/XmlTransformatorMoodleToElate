@@ -8,78 +8,59 @@
 
 package de.christophjobst.converter;
 
-import generated.Quiz;
+import generated.Quiz.Question;
 import de.christophjobst.main.RandomIdentifierGenerator;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.McSubTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock.McConfig;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock.McConfig.Different;
 
 public class MultichoiceToMcConverter {
 
-	public static McTaskBlock processing(
-			Quiz quizsammlung) {
+	public static McSubTaskDef processing(
+			Question question) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		McSubTaskDef subTask = new McSubTaskDef();
-		McTaskBlock mcTaskBlock = new McTaskBlock();
-
-		Config mcTaskConfig = new Config();
-		mcTaskConfig.setNoOfSelectedTasks(1);
-		mcTaskConfig.setPointsPerTask(1);
-		mcTaskConfig.setPreserveOrder(false);
-		mcTaskBlock.setConfig(mcTaskConfig);
 
 		McSubTaskDef.Correct correct = new McSubTaskDef.Correct();
 		McSubTaskDef.Incorrect incorrect = new McSubTaskDef.Incorrect();
 
-		McConfig mcConfig = new McConfig();
-		Different different = new Different();
-		different.setCorrectAnswerNegativePoints(0);
-		different.setIncorrectAnswerNegativePoints(0);
-		mcConfig.setDifferent(different);
-		mcTaskBlock.setMcConfig(mcConfig);
 
-		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
-
-			if (quizsammlung.getQuestion().get(i).getType().toString()
+			if (question.getType().toString()
 					.equals("multichoice")) {
-				System.out.println("Es ist ein multichoice, Indexnummer: " + i);
+				System.out.println("Es ist ein multichoice.");
 
 
 				// Allgemeine Angaben pro Frage
 				subTask.setTrash(false);
 				subTask.setInteractiveFeedback(false);
 				subTask.setPreserveOrderOfAnswers(false);
-				subTask.setDisplayedAnswers(quizsammlung.getQuestion().get(i)
+				subTask.setDisplayedAnswers(question
 						.getAnswer().toArray().length);
 
-				subTask.setCategory(quizsammlung.getQuestion().get(i)
+				subTask.setCategory(question
 						.getSingle().equals("true") ? "singleSelect"
 						: "multipleSelect");
 
 				// Spezielle Angaben pro Frage
-				subTask.setProblem(quizsammlung.getQuestion().get(i)
+				subTask.setProblem(question
 						.getQuestiontext().getText().toString());
-				subTask.setId(quizsammlung.getQuestion().get(i).getName()
+				subTask.setId(question.getName()
 						.getText().toString()
 						+ "_" + rand.getRandomID());
 
-				for (int j = 0; j < quizsammlung.getQuestion().get(i)
+				for (int j = 0; j < question
 						.getAnswer().toArray().length; j++) {
 
-					if (!quizsammlung.getQuestion().get(i).getAnswer().get(j)
+					if (!question.getAnswer().get(j)
 							.getFraction().equals("0")) {
-						correct.setValue(quizsammlung.getQuestion().get(i)
+						correct.setValue(question
 								.getAnswer().get(j).getText());
 						correct.setId(rand.getRandomID());
 						subTask.getCorrectOrIncorrect().add(correct);
 						correct = new McSubTaskDef.Correct();
 
 					} else {
-						incorrect.setValue(quizsammlung.getQuestion().get(i)
+						incorrect.setValue(question
 								.getAnswer().get(j).getText());
 						incorrect.setId(rand.getRandomID());
 						subTask.getCorrectOrIncorrect().add(incorrect);
@@ -88,15 +69,13 @@ public class MultichoiceToMcConverter {
 
 				}
 
-				mcTaskBlock.getMcSubTaskDefOrChoice().add(subTask);
 
-				subTask = new McSubTaskDef();
 
 				
 			}
-		}
 		
-		return mcTaskBlock;
+		
+		return subTask;
 	}
 
 }

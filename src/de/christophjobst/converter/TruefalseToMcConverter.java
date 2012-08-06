@@ -8,89 +8,56 @@
 
 package de.christophjobst.converter;
 
-import generated.Quiz;
+import generated.Quiz.Question;
 import de.christophjobst.main.RandomIdentifierGenerator;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.McSubTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock.McConfig;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock.McConfig.Different;
 
 public class TruefalseToMcConverter {
 
-	public static McTaskBlock processing(Quiz quizsammlung) {
+	public static McSubTaskDef processing(Question question) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		McSubTaskDef subTask = new McSubTaskDef();
-		McTaskBlock mcTaskBlock = new McTaskBlock();
-
-		Config mcTaskConfig = new Config();
-		mcTaskConfig.setNoOfSelectedTasks(1);
-		mcTaskConfig.setPointsPerTask(1);
-		mcTaskConfig.setPreserveOrder(false);
-		mcTaskBlock.setConfig(mcTaskConfig);
-
 		McSubTaskDef.Correct correct = new McSubTaskDef.Correct();
-
 		McSubTaskDef.Incorrect incorrect = new McSubTaskDef.Incorrect();
 
-		McConfig mcConfig = new McConfig();
-		Different different = new Different();
-		different.setCorrectAnswerNegativePoints(0);
-		different.setIncorrectAnswerNegativePoints(0);
-		mcConfig.setDifferent(different);
-		mcTaskBlock.setMcConfig(mcConfig);
+		if (question.getType().toString().equals("truefalse")) {
+			System.out.println("Es ist ein truefalse.");
 
-		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
+			// Allgemeine Angaben pro Frage
+			subTask.setTrash(false);
+			subTask.setInteractiveFeedback(false);
+			subTask.setPreserveOrderOfAnswers(false);
+			subTask.setDisplayedAnswers(2);
 
-			if (quizsammlung.getQuestion().get(i).getType().toString()
-					.equals("truefalse")) {
-				System.out.println("Es ist ein truefalse, Indexnummer: " + i);
+			subTask.setCategory("singleSelect");
 
+			// Spezielle Angaben pro Frage
+			subTask.setProblem(question.getQuestiontext().getText().toString());
+			subTask.setTrash(false);
+			subTask.setInteractiveFeedback(false);
+			subTask.setId(question.getName().getText().toString() + "_"
+					+ rand.getRandomID());
 
-				// Allgemeine Angaben pro Frage
-				subTask.setTrash(false);
-				subTask.setInteractiveFeedback(false);
-				subTask.setPreserveOrderOfAnswers(false);
-				subTask.setDisplayedAnswers(2);
+			correct.setId(rand.getRandomID());
+			incorrect.setId(rand.getRandomID());
 
-				subTask.setCategory("singleSelect");
-
-				// Spezielle Angaben pro Frage
-				subTask.setProblem(quizsammlung.getQuestion().get(i)
-						.getQuestiontext().getText().toString());
-				subTask.setTrash(false);
-				subTask.setInteractiveFeedback(false);
-				subTask.setId(quizsammlung.getQuestion().get(i).getName()
-						.getText().toString()
-						+ "_" + rand.getRandomID());
-
-				correct.setId(rand.getRandomID());
-				incorrect.setId(rand.getRandomID());
-
-				if (quizsammlung.getQuestion().get(i).getAnswer().get(0)
-						.getFraction().equals("100")) {
-					correct.setValue("Wahr");
-					incorrect.setValue("Falsch");
-				} else {
-					correct.setValue("Falsch");
-					incorrect.setValue("Wahr");
-				}
-
-				subTask.getCorrectOrIncorrect().add(correct);
-				subTask.getCorrectOrIncorrect().add(incorrect);
-				correct = new McSubTaskDef.Correct();
-				incorrect = new McSubTaskDef.Incorrect();
-
-				mcTaskBlock.getMcSubTaskDefOrChoice().add(subTask);
-
-				subTask = new McSubTaskDef();
-
+			if (question.getAnswer().get(0).getFraction().equals("100")) {
+				correct.setValue("Wahr");
+				incorrect.setValue("Falsch");
+			} else {
+				correct.setValue("Falsch");
+				incorrect.setValue("Wahr");
 			}
+
+			subTask.getCorrectOrIncorrect().add(correct);
+			subTask.getCorrectOrIncorrect().add(incorrect);
+			correct = new McSubTaskDef.Correct();
+			incorrect = new McSubTaskDef.Incorrect();
 		}
 
-		return mcTaskBlock;
+		return subTask;
 	}
 
 }
