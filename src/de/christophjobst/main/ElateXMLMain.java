@@ -7,7 +7,6 @@
  * 
  * TODO Lückentext erstes Zeichen, letztes Zeichen
  * TODO Umlaute korrigieren
- * TODO Inputverteilerschleife anpassen und Converterschleifen entfernen
  * TODO ComplexTaskDef-Category-Blöcke erschaffen, gem. category-Blöcken in Moodle-XML
  */
 

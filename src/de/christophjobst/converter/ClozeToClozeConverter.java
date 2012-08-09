@@ -108,7 +108,7 @@ public class ClozeToClozeConverter {
 				// {1:SHORTANSWER:=Genera}.
 				// Indizes: {1:^S^HORTANSWER:=Genera^}^
 				shortanswer = moodletext.substring(startShortanswerIndex + 13,
-						moodletext.indexOf("}", startShortanswerIndex) - 1);
+						moodletext.indexOf("}", startShortanswerIndex));
 				endShortanswerIndex = moodletext.indexOf("}",
 						startShortanswerIndex);
 				list.add(text);

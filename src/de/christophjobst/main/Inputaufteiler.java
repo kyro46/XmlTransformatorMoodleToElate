@@ -10,6 +10,8 @@
 
 package de.christophjobst.main;
 
+import java.util.Date;
+
 import de.christophjobst.converter.ClozeToClozeConverter;
 import de.christophjobst.converter.EssayToTextConverter;
 import de.christophjobst.converter.MatchingToMappingConverter;
@@ -40,7 +42,8 @@ public class Inputaufteiler {
 	public static ComplexTaskDef inputAufteilen(Quiz quizsammlung) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
-
+		Date date = new Date();
+		
 		// Klausurdatei aufsetzen. 1. Allgemeine Angaben
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
 		CorrectionMode correctionMode = new CorrectionMode();
@@ -53,7 +56,6 @@ public class Inputaufteiler {
 		correctionMode.setRegular(regular);
 		config.setKindnessExtensionTime(2);
 		config.setCorrectionMode(correctionMode);
-		config.setTasksPerPage(10);
 		config.setTries(5);
 		config.setTasksPerPage(30);
 		complexTaskDef.setConfig(config);
@@ -66,24 +68,26 @@ public class Inputaufteiler {
 		category.setMixAllSubTasks(false);
 		revisions.getRevision().add(revision);
 		revision.setAuthor("Christoph Jobst");
-		revision.setDate(24801486);
+		revision.setDate(date.getTime());
 		revision.setSerialNumber(1);
 		complexTaskDef.setRevisions(revisions);
 		complexTaskDef.setTitle("Testklausur");
-		
-		//Kategorie hinzufügen
-		//TODO Abhängigkeit von Moodle-XML-Kategorien
+
+		//Einheitliche Konfig für alle TaskBlock-Instanzen
+		Config generalTaskBlockConfig = new Config();
+		generalTaskBlockConfig.setNoOfSelectedTasks(1);
+		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
+		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
+		generalTaskBlockConfig.setPointsPerTask(5);
+		generalTaskBlockConfig.setPreserveOrder(false);
+
+		// Kategorie hinzufügen
+		// TODO Abhängigkeit von Moodle-XML-Kategorien
 		complexTaskDef.getCategory().add(category);
 
 		// Vorbereitung ClozeTaskBlock
 		ClozeTaskBlock clozeTaskBlock = new ClozeTaskBlock();
-		Config clozeTaskConfig = new Config();
-		clozeTaskConfig.setNoOfSelectedTasks(1);
-		// TODO Punkte = Anzahl der Lücken - inkonsistent, da in Frageinstanzen
-		// nicht einheitlich viele Lücken
-		clozeTaskConfig.setPointsPerTask(5);
-		clozeTaskConfig.setPreserveOrder(false);
-		clozeTaskBlock.setConfig(clozeTaskConfig);
+		clozeTaskBlock.setConfig(generalTaskBlockConfig);
 		ClozeConfig clozeConfig = new ClozeConfig();
 		clozeConfig.setIgnoreCase(true);
 		clozeConfig.setNegativePoints(0);
@@ -91,34 +95,17 @@ public class Inputaufteiler {
 
 		// Vorbereitung TextTaskBlock
 		TextTaskBlock essayTextTaskBlock = new TextTaskBlock();
-		Config texttaskConfig = new Config();
-		texttaskConfig.setNoOfSelectedTasks(1);
-		texttaskConfig.setPointsPerTask(10);
-		texttaskConfig.setPreserveOrder(false);
-		essayTextTaskBlock.setConfig(texttaskConfig);
+		essayTextTaskBlock.setConfig(generalTaskBlockConfig);
 
 		// Vorbereitung MappingTaskBlock
 		MappingTaskBlock mappingTaskBlock = new MappingTaskBlock();
-		Config mappingTaskConfig = new Config();
-		mappingTaskConfig.setNoOfSelectedTasks(1);
-		// TODO Punkte = Anzahl der Matchings - inkonsistent, da in
-		// Frageinstanzen nicht einheitlich viele Matchings
-		mappingTaskConfig.setPointsPerTask(5);
-		mappingTaskConfig.setPreserveOrder(false);
-		mappingTaskBlock.setConfig(mappingTaskConfig);
 		MappingConfig mappingConfig = new MappingConfig();
 		mappingConfig.setNegativePoints(0);
 		mappingTaskBlock.setMappingConfig(mappingConfig);
 
 		// Vorbereitung McTaskBlock
 		McTaskBlock mcTaskBlock = new McTaskBlock();
-
-		Config mcTaskConfig = new Config();
-		mcTaskConfig.setNoOfSelectedTasks(1);
-		mcTaskConfig.setPointsPerTask(1);
-		mcTaskConfig.setPreserveOrder(false);
-		mcTaskBlock.setConfig(mcTaskConfig);
-
+		mcTaskBlock.setConfig(generalTaskBlockConfig);
 		McConfig mcConfig = new McConfig();
 		Different different = new Different();
 		different.setCorrectAnswerNegativePoints(0);
@@ -128,22 +115,11 @@ public class Inputaufteiler {
 
 		// Vorbereitung ShortanswerTextTaskBlock
 		TextTaskBlock shortanswerTextTaskBlock = new TextTaskBlock();
-
-		Config shortanswertTextTaskConfig = new Config();
-		shortanswertTextTaskConfig.setNoOfSelectedTasks(1);
-		shortanswertTextTaskConfig.setPointsPerTask(10);
-		shortanswertTextTaskConfig.setPreserveOrder(false);
-		shortanswerTextTaskBlock.setConfig(texttaskConfig);
+		shortanswerTextTaskBlock.setConfig(generalTaskBlockConfig);
 
 		// Vorbereitung TruefalseMcTaskBlock
 		McTaskBlock truefalseMcTaskBlock = new McTaskBlock();
-
-		Config truefalseMcTaskConfig = new Config();
-		truefalseMcTaskConfig.setNoOfSelectedTasks(1);
-		truefalseMcTaskConfig.setPointsPerTask(1);
-		truefalseMcTaskConfig.setPreserveOrder(false);
-		truefalseMcTaskBlock.setConfig(truefalseMcTaskConfig);
-
+		truefalseMcTaskBlock.setConfig(generalTaskBlockConfig);
 		McConfig truefalseMcConfig = new McConfig();
 		Different truefalseDifferent = new Different();
 		truefalseDifferent.setCorrectAnswerNegativePoints(0);
