@@ -24,50 +24,47 @@ public class ClozeToClozeConverter {
 
 		ClozeSubTaskDef subTask = new ClozeSubTaskDef();
 
-			if (question.getType().toString()
-					.equals("cloze")) {
-				System.out.println("Es ist ein cloze.");
+		if (question.getType().toString().equals("cloze")) {
+			System.out.println("Es ist ein cloze.");
 
-				// Allgemeine Angaben pro Frage
-				subTask.setTrash(false);
-				subTask.setInteractiveFeedback(false);
-				subTask.setCorrectionHint(" ");
-				subTask.setHint(" ");
+			// Allgemeine Angaben pro Frage
+			subTask.setTrash(false);
+			subTask.setInteractiveFeedback(false);
+			subTask.setCorrectionHint(" ");
+			subTask.setHint(" ");
 
-				// Spezielle Angaben pro Frage
-				subTask.setId(question.getName()
-						.getText().toString()
-						+ "_" + rand.getRandomID());
+			// Spezielle Angaben pro Frage
+			subTask.setId(question.getName().getText().toString() + "_"
+					+ rand.getRandomID());
 
-				subTask.setProblem("Lueckentext.");
+			subTask.setProblem("Lueckentext.");
 
-				// Stringoperationen, um die in die Aufgabenstellung
-				// eingebetteten Lösungsphrasen der Lücken zu extrahieren
-				List<String> list = new ArrayList<String>();
-				list = clozeAufloeser(question
-						.getQuestiontext().getText());
+			// Stringoperationen, um die in die Aufgabenstellung
+			// eingebetteten Lösungsphrasen der Lücken zu extrahieren
+			List<String> list = new ArrayList<String>();
+			list = clozeAufloeser(question.getQuestiontext().getText());
 
-				// Schleife um die Stringfelder den Text und Gap-Elementen
-				// zuzuweisen
-				Cloze cloze = new Cloze();
-				for (int j = 0; j < list.toArray().length; j++) {
-					Gap gap = new Gap();
+			// Schleife um die Stringfelder den Text und Gap-Elementen
+			// zuzuweisen
+			Cloze cloze = new Cloze();
+			for (int j = 0; j < list.toArray().length; j++) {
+				Gap gap = new Gap();
 
-					if (j % 2 == 1) {
-						gap.getCorrect().add(list.get(j));
-						gap.setIgnoreCase(true);
-						cloze.getTextOrGap().add(gap);
-					} else {
+				if (j % 2 == 1) {
+					gap.getCorrect().add(list.get(j));
+					gap.setIgnoreCase(true);
+					cloze.getTextOrGap().add(gap);
+				} else {
 
-						cloze.getTextOrGap().add(list.get(j));
-					}
+					cloze.getTextOrGap().add(list.get(j));
 				}
-
-				subTask.setCloze(cloze);
-
-				list = new ArrayList<String>();
-				
 			}
+
+			subTask.setCloze(cloze);
+
+			list = new ArrayList<String>();
+
+		}
 
 		return subTask;
 	}
@@ -102,8 +99,14 @@ public class ClozeToClozeConverter {
 				list.add(text);
 
 			} else {
-				text = moodletext.substring(endShortanswerIndex + 1,
-						startShortanswerIndex - 3);
+				if (endShortanswerIndex == 0) {
+					text = moodletext.substring(endShortanswerIndex,
+							startShortanswerIndex - 3);
+				} else {
+
+					text = moodletext.substring(endShortanswerIndex + 1,
+							startShortanswerIndex - 3);
+				}
 				// Die Antwort extrahieren, Ausgangsformat:
 				// {1:SHORTANSWER:=Genera}.
 				// Indizes: {1:^S^HORTANSWER:=Genera^}^
@@ -111,6 +114,7 @@ public class ClozeToClozeConverter {
 						moodletext.indexOf("}", startShortanswerIndex));
 				endShortanswerIndex = moodletext.indexOf("}",
 						startShortanswerIndex);
+
 				list.add(text);
 				list.add(shortanswer);
 			}
