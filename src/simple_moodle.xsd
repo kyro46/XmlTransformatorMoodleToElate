@@ -168,6 +168,23 @@
 									</xs:choice>
 								</xs:sequence>
 							</xs:choice>
+							<xs:element name="category">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="text">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="Anzahl und Erforschung"/>
+													<xs:enumeration value="Buchproduktion"/>
+													<xs:enumeration value="De vulgari eloquenti"/>
+													<xs:enumeration value="Existenz des gesuchten Volgare"/>
+													<xs:enumeration value="bon usage - mauvais usage"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+								</xs:complexType>
+							</xs:element>
 						</xs:sequence>
 						<xs:attribute name="type" use="required">
 							<xs:simpleType>

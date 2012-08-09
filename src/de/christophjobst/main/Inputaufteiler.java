@@ -9,8 +9,10 @@
 
 package de.christophjobst.main;
 
+import java.util.*;
 import java.util.Date;
 
+import de.christophjobst.converter.CategoryToCategoryConverter;
 import de.christophjobst.converter.ClozeToClozeConverter;
 import de.christophjobst.converter.EssayToTextConverter;
 import de.christophjobst.converter.MatchingToMappingConverter;
@@ -18,6 +20,7 @@ import de.christophjobst.converter.MultichoiceToMcConverter;
 import de.christophjobst.converter.ShortanswerToTextConverter;
 import de.christophjobst.converter.TruefalseToMcConverter;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.MappingTaskBlock;
@@ -42,13 +45,12 @@ public class Inputaufteiler {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 		Date date = new Date();
-		
+
 		// Klausurdatei aufsetzen. 1. Allgemeine Angaben
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
 		CorrectionMode correctionMode = new CorrectionMode();
 		Regular regular = new Regular();
 		ComplexTaskDef.Config config = new ComplexTaskDef.Config();
-		ComplexTaskDef.Category category = new ComplexTaskDef.Category();
 		ComplexTaskDef.Revisions.Revision revision = new ComplexTaskDef.Revisions.Revision();
 		ComplexTaskDef.Revisions revisions = new ComplexTaskDef.Revisions();
 
@@ -61,10 +63,7 @@ public class Inputaufteiler {
 		complexTaskDef.setDescription("Eine Testklausur");
 		complexTaskDef.setID(rand.getRandomID());
 		complexTaskDef.setShowHandlingHintsBeforeStart(false);
-		category.setTitle("Kategorie 1");
-		category.setId("Kategorie1_" + rand.getRandomID());
-		category.setIgnoreOrderOfBlocks(false);
-		category.setMixAllSubTasks(false);
+
 		revisions.getRevision().add(revision);
 		revision.setAuthor("Christoph Jobst");
 		revision.setDate(date.getTime());
@@ -72,7 +71,7 @@ public class Inputaufteiler {
 		complexTaskDef.setRevisions(revisions);
 		complexTaskDef.setTitle("Testklausur");
 
-		//Einheitliche Konfig für alle TaskBlock-Instanzen
+		// Einheitliche Konfig für alle TaskBlock-Instanzen
 		Config generalTaskBlockConfig = new Config();
 		generalTaskBlockConfig.setNoOfSelectedTasks(1);
 		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
@@ -82,7 +81,6 @@ public class Inputaufteiler {
 
 		// Kategorie hinzufügen
 		// TODO Abhängigkeit von Moodle-XML-Kategorien
-		complexTaskDef.getCategory().add(category);
 
 		// Vorbereitung ClozeTaskBlock
 		ClozeTaskBlock clozeTaskBlock = new ClozeTaskBlock();
@@ -130,6 +128,11 @@ public class Inputaufteiler {
 		// Zuweisungs- und Konvertierungsschleife
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
 			try {
+				if (quizsammlung.getQuestion().get(i).getType().toString()
+						.equals("category")) {
+					complexTaskDef.getCategory().add(CategoryToCategoryConverter.processing(quizsammlung.getQuestion().get(i)));
+				}
+
 				if (quizsammlung.getQuestion().get(i).getType().toString()
 						.equals("essay")) {
 					essayTextTaskBlock.getTextSubTaskDefOrChoice().add(

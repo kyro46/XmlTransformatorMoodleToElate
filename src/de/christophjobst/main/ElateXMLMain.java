@@ -6,7 +6,7 @@
  * @version 1.0
  * 
  * TODO Umlaute korrigieren
- * TODO ComplexTaskDef-Category-Blöcke erschaffen, gem. category-Blöcken in Moodle-XML
+ * TODO ComplexTaskDef-Category-Blöcke filtern und Fragen zuordnen
  */
 
 package de.christophjobst.main;
