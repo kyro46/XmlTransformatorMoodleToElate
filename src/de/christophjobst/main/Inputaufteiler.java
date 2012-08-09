@@ -5,7 +5,6 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
- * TODO für jeden Taskblock die gleiche Config verwenden
  */
 
 package de.christophjobst.main;
@@ -99,6 +98,7 @@ public class Inputaufteiler {
 
 		// Vorbereitung MappingTaskBlock
 		MappingTaskBlock mappingTaskBlock = new MappingTaskBlock();
+		mappingTaskBlock.setConfig(generalTaskBlockConfig);
 		MappingConfig mappingConfig = new MappingConfig();
 		mappingConfig.setNegativePoints(0);
 		mappingTaskBlock.setMappingConfig(mappingConfig);

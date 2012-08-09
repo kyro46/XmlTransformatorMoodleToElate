@@ -39,7 +39,7 @@ public class ClozeToClozeConverter {
 						.getText().toString()
 						+ "_" + rand.getRandomID());
 
-				subTask.setProblem("Lösen Sie den folgenden Lückentext.");
+				subTask.setProblem("Lueckentext.");
 
 				// Stringoperationen, um die in die Aufgabenstellung
 				// eingebetteten Lösungsphrasen der Lücken zu extrahieren
