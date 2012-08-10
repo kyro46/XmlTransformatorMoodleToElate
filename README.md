@@ -14,3 +14,10 @@ Der volle Konfigurationsumfang von Moodlefragen wird nicht unterstützt.
 
 Nutzung:
 Moodle-XML-Dateipfad als Startparameter übergeben
+
+## TODO ##
+ * TODO Mehrere Schachtelungsebenen für Category übernehmen, sobald complexTaskDef.xsd final
+ * TODO Weitere Fragetypen einbauen
+ * TODO Innere Inputaufteiler-Schleife (Taskblock-Erstellung)rekursiv machen
+ * TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in Frageinstanzen nicht einheitlich viele Lücken/Matchings
+

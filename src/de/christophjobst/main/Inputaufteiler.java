@@ -37,7 +37,7 @@ public class Inputaufteiler {
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 		Date date = new Date();
 
-		// Klausurdatei aufsetzen. 1. Allgemeine Angaben
+		// Klausurdatei aufsetzen - Allgemeine Angaben
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
 		CorrectionMode correctionMode = new CorrectionMode();
 		Regular regular = new Regular();
@@ -62,12 +62,13 @@ public class Inputaufteiler {
 		complexTaskDef.setRevisions(revisions);
 		complexTaskDef.setTitle("Testklausur");
 
-		// Für Debugging, solange Fragezuordnung zu Category nicht geht
-		// complexTaskDef.getCategory().add(
-		// CategoryToCategoryConverter.processing(quizsammlung
-		// .getQuestion().get(0)));
-
-		// Zuweisungs und Konvertierungsschleife für Category-Blöcke - BETA
+		/*
+		 * Zuweisungs und Konvertierungsschleife für Category-Blöcke
+		 * Funktionsweise: 1. Alle Titel einlesen und in categoryNameList
+		 * speichern Dabei Redundanz entfernen 2. Sofern erstmaliges Auftrten
+		 * einer neuen Category hinzufügen eines neuen Objektex im
+		 * categoryManager
+		 */
 		List<String> categoryNameList = new ArrayList<String>();
 		List<CategoryManager> categoryManager = new ArrayList<CategoryManager>();
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
@@ -90,26 +91,12 @@ public class Inputaufteiler {
 
 		}
 
-		// Internal Debuggingcode
-		for (int i = 0; i < categoryManager.toArray().length; i++) {
-			System.out.println(categoryManager.get(i).getTitle());
-		}
-
-		System.out.println("..................");
-
-		for (String categoryName : categoryNameList) {
-			System.out.println(categoryName);
-		}
-
-		for (int i = 0; i < categoryManager.toArray().length; i++) {
-			System.out.println(i
-					+ " "
-					+ categoryManager.get(i).getTitle()
-							.equals(categoryNameList.get(i)));
-		}
-		// Internal Debuggingcode Ende
-
-		// Zuweisungs- und Konvertierungsschleife für Fragen
+		/*
+		 * Zuweisungs- und Konvertierungsschleife für Fragen Funktionsweise: 1.
+		 * Gehe alle Fragen im Moodle-Quiz durch. 2. Ist ein Category dabei? ->
+		 * Gehe die Fragen ab da durch und füge sie dem entsprechenden Element
+		 * (categoryManager) hinzu, bis eine neue Category auftaucht.
+		 */
 		int belongingCategoryIndex = 0;
 		for (int j = 0; j < quizsammlung.getQuestion().toArray().length; j++) {
 			try {
@@ -117,6 +104,10 @@ public class Inputaufteiler {
 				if (quizsammlung.getQuestion().get(j).getType().toString()
 						.equals("category")) {
 
+					/*
+					 * Abgleich: Ist zu welchem Objekt im categoryManager gehört
+					 * die aktuell gefundene Category?
+					 */
 					for (int k = 0; k < categoryManager.toArray().length; k++) {
 						if (categoryManager
 								.get(k)
@@ -128,6 +119,10 @@ public class Inputaufteiler {
 						}
 					}
 
+					/*
+					 * TaskBlock-Erstellungsschleife Die nächsten Elemente bis
+					 * zur nächten Category konvertieren und hinzufügen.
+					 */
 					for (int i = j + 1; i < quizsammlung.getQuestion()
 							.toArray().length; i++) {
 
@@ -143,14 +138,15 @@ public class Inputaufteiler {
 													.getQuestion().get(i)));
 							categoryManager.get(belongingCategoryIndex)
 									.setHasTextTaskBlock(true);
-							System.out.println("Categoryblock nummer "
-									+ belongingCategoryIndex
-									+ " hat nun "
-									+ categoryManager
-											.get(belongingCategoryIndex)
-											.getTextTaskBlock()
-											.getTextSubTaskDefOrChoice()
-											.toArray().length + " textfragen");
+							// Debug:
+							// System.out.println("Categoryblock nummer "
+							// + belongingCategoryIndex
+							// + " hat nun "
+							// + categoryManager
+							// .get(belongingCategoryIndex)
+							// .getTextTaskBlock()
+							// .getTextSubTaskDefOrChoice()
+							// .toArray().length + " textfragen");
 						}
 
 						if (quizsammlung.getQuestion().get(i).getType()
@@ -164,15 +160,6 @@ public class Inputaufteiler {
 													.getQuestion().get(i)));
 							categoryManager.get(belongingCategoryIndex)
 									.setHasClozeTaskBlock(true);
-							System.out.println("Categoryblock nummer "
-									+ belongingCategoryIndex
-									+ " hat nun "
-									+ categoryManager
-											.get(belongingCategoryIndex)
-											.getTextTaskBlock()
-											.getTextSubTaskDefOrChoice()
-											.toArray().length + " clozefragen");
-
 						}
 
 						if (quizsammlung.getQuestion().get(i).getType()
@@ -186,16 +173,6 @@ public class Inputaufteiler {
 													.getQuestion().get(i)));
 							categoryManager.get(belongingCategoryIndex)
 									.setHasMcTaskBlock(true);
-							System.out.println("Categoryblock nummer "
-									+ belongingCategoryIndex
-									+ " hat nun "
-									+ categoryManager
-											.get(belongingCategoryIndex)
-											.getTextTaskBlock()
-											.getTextSubTaskDefOrChoice()
-											.toArray().length
-									+ " truefalsefragen");
-
 						}
 
 						if (quizsammlung.getQuestion().get(i).getType()
@@ -209,14 +186,6 @@ public class Inputaufteiler {
 													.getQuestion().get(i)));
 							categoryManager.get(belongingCategoryIndex)
 									.setHasMcTaskBlock(true);
-							System.out.println("Categoryblock nummer "
-									+ belongingCategoryIndex
-									+ " hat nun "
-									+ categoryManager
-											.get(belongingCategoryIndex)
-											.getTextTaskBlock()
-											.getTextSubTaskDefOrChoice()
-											.toArray().length + " mcfragen");
 
 						}
 
@@ -250,7 +219,26 @@ public class Inputaufteiler {
 						}
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("category")) {
-							// TODO Das ruft nach Rekursion
+							/*
+							 * Wird ein Category gefunden, dann verlasse die
+							 * TaskBlock-Erstellungsschleife und suche dir die
+							 * neue zu füllende Category aus dem CategoryManager
+							 * 
+							 * TODO Das ruft nach Rekursion:
+							 * 
+							 * Wenn es eine Category ist und zu einer
+							 * Unterkategorie gehört verfahre wie bisher mit den
+							 * TaskBlöcken -> füge der aktuellen Category eine
+							 * Unterkategorie hinzu.
+							 * 
+							 * Alternative: Category-Blöcke einzeln erstellen
+							 * (wie bisher) und iterativ gesondert einander
+							 * zuweisen
+							 * 
+							 * In beiden Fällen: Stringparser für "/" in
+							 * Category.Title nötig, um Unterordner zu
+							 * definieren.
+							 */
 							break;
 						}
 					}
@@ -260,31 +248,6 @@ public class Inputaufteiler {
 				e.printStackTrace();
 			}
 		}
-
-		// // Essay to Text
-		// complexTaskDef.getCategory().get(0)
-		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-		// .add(essayTextTaskBlock);
-		// // Shortanswer to Text
-		// complexTaskDef.getCategory().get(0)
-		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-		// .add(shortanswerTextTaskBlock);
-		// // Cloze to Cloze
-		// complexTaskDef.getCategory().get(0)
-		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-		// .add(clozeTaskBlock);
-		// // Matching to Mapping
-		// complexTaskDef.getCategory().get(0)
-		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-		// .add(mappingTaskBlock);
-		// // Truefalse to Mc
-		// complexTaskDef.getCategory().get(0)
-		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-		// .add(truefalseMcTaskBlock);
-		// // Multichoice to Mc
-		// complexTaskDef.getCategory().get(0)
-		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-		// .add(mcTaskBlock);
 
 		for (CategoryManager categoryMana : categoryManager) {
 			complexTaskDef.getCategory().add(categoryMana.generateCategory());

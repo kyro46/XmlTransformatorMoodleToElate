@@ -5,7 +5,9 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
+ * TODO Mehrere Schachtelungsebenen für Category übernehmen, sobald complexTaskDef.xsd final
  * TODO Weitere Fragetypen einbauen
+ * TODO Innere Inputaufteiler-Schleife rekursiv machen
  */
 
 package de.christophjobst.main;
@@ -27,19 +29,20 @@ import javax.xml.bind.Unmarshaller;
 
 public class ElateXMLMain {
 
-	// private static final String QUIZ_XML = "./roma2.xml";
+	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
+	//private static final String QUIZ_XML = "./roma4.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
 
 		final String QUIZ_XML = "./" + args[0];
 
-		// JAXB Contect für Moodle-Quiz
+		// JAXB Context für Moodle-Quiz
 		JAXBContext context_quiz = JAXBContext.newInstance(Quiz.class);
 		Unmarshaller um_quiz = context_quiz.createUnmarshaller();
 		Quiz quizsammlung = (Quiz) um_quiz.unmarshal(new FileReader(QUIZ_XML));
 
-		// JAXB Contect und Marshaller für ComplexTaskDef
+		// JAXB Context und Marshaller für ComplexTaskDef
 		JAXBContext context_complexTaskDef = JAXBContext
 				.newInstance(ComplexTaskDef.class);
 		Marshaller m_complexTaskDef = context_complexTaskDef.createMarshaller();

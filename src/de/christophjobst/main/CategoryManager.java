@@ -35,9 +35,6 @@ public class CategoryManager {
 		generalTaskBlockConfig.setPointsPerTask(5);
 		generalTaskBlockConfig.setPreserveOrder(false);
 
-		// Kategorie hinzufügen
-		// TODO Abhängigkeit von Moodle-XML-Kategorien
-
 		// Vorbereitung ClozeTaskBlock
 		clozeTaskBlock.setConfig(generalTaskBlockConfig);
 		ClozeConfig clozeConfig = new ClozeConfig();
