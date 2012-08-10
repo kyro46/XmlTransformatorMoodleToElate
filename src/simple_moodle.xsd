@@ -14,11 +14,7 @@
 										<xs:element name="text">
 											<xs:simpleType>
 												<xs:restriction base="xs:string">
-													<xs:enumeration value="Anzahl und Erforschung"/>
-													<xs:enumeration value="Buchproduktion"/>
-													<xs:enumeration value="De vulgari eloquenti"/>
-													<xs:enumeration value="Existenz des gesuchten Volgare"/>
-													<xs:enumeration value="bon usage - mauvais usage"/>
+
 												</xs:restriction>
 											</xs:simpleType>
 										</xs:element>
@@ -78,8 +74,7 @@
 																<xs:element name="text">
 																	<xs:simpleType>
 																		<xs:restriction base="xs:string">
-																			<xs:enumeration value="bon usage"/>
-																			<xs:enumeration value="mauvais usage"/>
+
 																		</xs:restriction>
 																	</xs:simpleType>
 																</xs:element>
@@ -102,7 +97,6 @@
 													<xs:element name="single">
 														<xs:simpleType>
 															<xs:restriction base="xs:string">
-																<xs:enumeration value="true"/>
 															</xs:restriction>
 														</xs:simpleType>
 													</xs:element>
@@ -136,7 +130,6 @@
 													<xs:element name="answernumbering">
 														<xs:simpleType>
 															<xs:restriction base="xs:string">
-																<xs:enumeration value="abc"/>
 															</xs:restriction>
 														</xs:simpleType>
 													</xs:element>
@@ -174,11 +167,7 @@
 										<xs:element name="text">
 											<xs:simpleType>
 												<xs:restriction base="xs:string">
-													<xs:enumeration value="Anzahl und Erforschung"/>
-													<xs:enumeration value="Buchproduktion"/>
-													<xs:enumeration value="De vulgari eloquenti"/>
-													<xs:enumeration value="Existenz des gesuchten Volgare"/>
-													<xs:enumeration value="bon usage - mauvais usage"/>
+
 												</xs:restriction>
 											</xs:simpleType>
 										</xs:element>

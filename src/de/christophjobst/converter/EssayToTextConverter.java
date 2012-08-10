@@ -24,6 +24,8 @@ public class EssayToTextConverter {
 			System.out.println("Es ist ein essay.");
 
 			subTask.setProblem(question.getQuestiontext().getText().toString());
+			subTask.setHint(question.getName().getText().toString());
+
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);
 			subTask.setId(question.getName().getText().toString() + "_"

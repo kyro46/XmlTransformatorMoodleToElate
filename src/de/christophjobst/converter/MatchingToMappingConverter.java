@@ -32,7 +32,7 @@ public class MatchingToMappingConverter {
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);
 			subTask.setCorrectionHint(" ");
-			subTask.setHint(" ");
+			subTask.setHint(question.getName().getText().toString());
 
 			// Spezielle Angaben pro Frage
 			subTask.setId(question.getName().getText().toString() + "_"

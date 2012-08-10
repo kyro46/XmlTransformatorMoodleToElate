@@ -8,6 +8,8 @@
 
 package de.christophjobst.converter;
 
+
+import java.io.UnsupportedEncodingException;
 import java.util.*;
 
 import generated.Quiz.Question;
@@ -17,7 +19,8 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef.Cloze.
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef;
 
 public class ClozeToClozeConverter {
-
+	
+	
 	public static ClozeSubTaskDef processing(Question question) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
@@ -31,13 +34,23 @@ public class ClozeToClozeConverter {
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);
 			subTask.setCorrectionHint(" ");
-			subTask.setHint(" ");
+			subTask.setHint(question.getName().getText().toString());
 
 			// Spezielle Angaben pro Frage
 			subTask.setId(question.getName().getText().toString() + "_"
 					+ rand.getRandomID());
 
-			subTask.setProblem("Lueckentext.");
+			String problem = "Lösen Sie folgenden Lückentext.";
+			//Konvertierung des String in separaten Block,
+			//falls bei häufiger Nutzung Auslagerung nötig
+				try {
+					byte[] bytes = problem.getBytes("UTF-8");
+					problem = new String(bytes);
+					System.out.println(problem);
+					subTask.setProblem(problem);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
 
 			// Stringoperationen, um die in die Aufgabenstellung
 			// eingebetteten Lösungsphrasen der Lücken zu extrahieren

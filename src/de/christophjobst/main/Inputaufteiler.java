@@ -9,7 +9,6 @@
 
 package de.christophjobst.main;
 
-import java.util.*;
 import java.util.Date;
 
 import de.christophjobst.converter.CategoryToCategoryConverter;
@@ -20,7 +19,6 @@ import de.christophjobst.converter.MultichoiceToMcConverter;
 import de.christophjobst.converter.ShortanswerToTextConverter;
 import de.christophjobst.converter.TruefalseToMcConverter;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.MappingTaskBlock;
@@ -71,9 +69,9 @@ public class Inputaufteiler {
 		complexTaskDef.setRevisions(revisions);
 		complexTaskDef.setTitle("Testklausur");
 
-		// Einheitliche Konfig für alle TaskBlock-Instanzen
+		// Einheitliche Config für alle TaskBlock-Instanzen
 		Config generalTaskBlockConfig = new Config();
-		generalTaskBlockConfig.setNoOfSelectedTasks(1);
+		generalTaskBlockConfig.setNoOfSelectedTasks(100);
 		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
 		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
 		generalTaskBlockConfig.setPointsPerTask(5);
@@ -125,13 +123,19 @@ public class Inputaufteiler {
 		truefalseMcConfig.setDifferent(truefalseDifferent);
 		truefalseMcTaskBlock.setMcConfig(truefalseMcConfig);
 
+		//Für Debugging, solange Fragezuordnung zu Category nicht geht
+		complexTaskDef.getCategory().add(CategoryToCategoryConverter.processing(quizsammlung.getQuestion().get(0)));
+		
+		
 		// Zuweisungs- und Konvertierungsschleife
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
 			try {
-				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("category")) {
-					complexTaskDef.getCategory().add(CategoryToCategoryConverter.processing(quizsammlung.getQuestion().get(i)));
-				}
+//				if (quizsammlung.getQuestion().get(i).getType().toString()
+//						.equals("category")) {
+//					complexTaskDef.getCategory().add(
+//							CategoryToCategoryConverter.processing(quizsammlung
+//									.getQuestion().get(i)));
+//				}
 
 				if (quizsammlung.getQuestion().get(i).getType().toString()
 						.equals("essay")) {

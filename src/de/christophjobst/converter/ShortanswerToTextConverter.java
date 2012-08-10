@@ -30,6 +30,8 @@ public class ShortanswerToTextConverter {
 
 				String problem = question.getName()
 						.getText();
+				subTask.setHint(question.getName().getText().toString());
+
 				String questionname = question
 						.getQuestiontext().getText();
 				String answer = question.getAnswer()

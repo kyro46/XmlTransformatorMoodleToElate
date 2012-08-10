@@ -5,7 +5,6 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
- * TODO Umlaute korrigieren
  * TODO ComplexTaskDef-Category-Blöcke filtern und Fragen zuordnen
  */
 
@@ -28,7 +27,7 @@ import javax.xml.bind.Unmarshaller;
 
 public class ElateXMLMain {
 
-	//private static final String QUIZ_XML = "./roma2.xml";
+	// private static final String QUIZ_XML = "./roma2.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
@@ -53,7 +52,6 @@ public class ElateXMLMain {
 		// DebuggingAusgabe.printQuestionsTypeAndAnswer(quizsammlung);
 		// DebuggingAusgabe.printExistingComplexTaskDefCategoryblocks(complexTaskDef);
 
-		
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
 		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
 
@@ -61,7 +59,8 @@ public class ElateXMLMain {
 		System.out.println("Output from XML File: ");
 		m_complexTaskDef.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
 				Boolean.TRUE);
-		m_complexTaskDef.marshal(complexTaskDef, System.out);
+		m_complexTaskDef.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+		//m_complexTaskDef.marshal(complexTaskDef, System.out);
 
 		Writer w = null;
 		try {

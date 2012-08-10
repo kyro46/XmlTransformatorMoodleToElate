@@ -44,6 +44,7 @@ public class MultichoiceToMcConverter {
 				// Spezielle Angaben pro Frage
 				subTask.setProblem(question
 						.getQuestiontext().getText().toString());
+				subTask.setHint(question.getName().getText().toString());
 				subTask.setId(question.getName()
 						.getText().toString()
 						+ "_" + rand.getRandomID());

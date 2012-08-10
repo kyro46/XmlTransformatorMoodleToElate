@@ -13,10 +13,9 @@ import java.math.BigInteger;
 
 public class RandomIdentifierGenerator {
 
-	  private SecureRandom random = new SecureRandom();
+	private SecureRandom random = new SecureRandom();
 
-	  public String getRandomID()
-	  {
-	    return new BigInteger(51, random).toString(32);
-	  }
+	public String getRandomID() {
+		return new BigInteger(51, random).toString(32);
+	}
 }

@@ -35,6 +35,7 @@ public class TruefalseToMcConverter {
 
 			// Spezielle Angaben pro Frage
 			subTask.setProblem(question.getQuestiontext().getText().toString());
+			subTask.setHint(question.getName().getText().toString());
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);
 			subTask.setId(question.getName().getText().toString() + "_"

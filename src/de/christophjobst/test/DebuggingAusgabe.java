@@ -33,6 +33,8 @@ public class DebuggingAusgabe {
 	
 	public static void printQuestionsTypeAndAnswer(Quiz quizsammlung) {
 
+		System.out.println(System.getProperty("file.encoding"));
+		
 		System.out.println(quizsammlung.getQuestion().toArray().length + "Fragen in der Quizliste.");
 
 				for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {

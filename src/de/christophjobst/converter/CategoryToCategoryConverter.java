@@ -7,7 +7,6 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Categor
 
 public class CategoryToCategoryConverter {
 
-
 	public static Category processing(Question question) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
@@ -22,15 +21,8 @@ public class CategoryToCategoryConverter {
 		category.setId("Kategorie_" + rand.getRandomID());
 		category.setIgnoreOrderOfBlocks(false);
 		category.setMixAllSubTasks(false);
-		
+
 		return category;
 	}
 
-	
-	
-	
-	
-	
-	
-	
 }
