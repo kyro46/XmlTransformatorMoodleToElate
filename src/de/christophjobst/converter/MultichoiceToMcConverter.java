@@ -25,9 +25,9 @@ public class MultichoiceToMcConverter {
 		McSubTaskDef.Incorrect incorrect = new McSubTaskDef.Incorrect();
 
 
-			if (question.getType().toString()
-					.equals("multichoice")) {
-				System.out.println("Es ist ein multichoice.");
+//			if (question.getType().toString()
+//					.equals("multichoice")) {
+//				System.out.println("Es ist ein multichoice.");
 
 
 				// Allgemeine Angaben pro Frage
@@ -73,7 +73,7 @@ public class MultichoiceToMcConverter {
 
 
 				
-			}
+//			}
 		
 		
 		return subTask;

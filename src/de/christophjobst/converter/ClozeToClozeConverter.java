@@ -27,8 +27,8 @@ public class ClozeToClozeConverter {
 
 		ClozeSubTaskDef subTask = new ClozeSubTaskDef();
 
-		if (question.getType().toString().equals("cloze")) {
-			System.out.println("Es ist ein cloze.");
+//		if (question.getType().toString().equals("cloze")) {
+//			System.out.println("Es ist ein cloze.");
 
 			// Allgemeine Angaben pro Frage
 			subTask.setTrash(false);
@@ -46,7 +46,7 @@ public class ClozeToClozeConverter {
 				try {
 					byte[] bytes = problem.getBytes("UTF-8");
 					problem = new String(bytes);
-					System.out.println(problem);
+//					System.out.println(problem);
 					subTask.setProblem(problem);
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
@@ -77,7 +77,7 @@ public class ClozeToClozeConverter {
 
 			list = new ArrayList<String>();
 
-		}
+//		}
 
 		return subTask;
 	}

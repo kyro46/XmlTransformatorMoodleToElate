@@ -20,8 +20,8 @@ public class EssayToTextConverter {
 
 		TextSubTaskDef subTask = new TextSubTaskDef();
 
-		if (question.getType().toString().equals("essay")) {
-			System.out.println("Es ist ein essay.");
+//		if (question.getType().toString().equals("essay")) {
+//			System.out.println("Es ist ein essay.");
 
 			subTask.setProblem(question.getQuestiontext().getText().toString());
 			subTask.setHint(question.getName().getText().toString());
@@ -31,7 +31,7 @@ public class EssayToTextConverter {
 			subTask.setId(question.getName().getText().toString() + "_"
 					+ rand.getRandomID());
 
-		}
+//		}
 
 		return subTask;
 	}

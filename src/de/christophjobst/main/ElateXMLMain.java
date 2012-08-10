@@ -5,7 +5,7 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
- * TODO ComplexTaskDef-Category-Blöcke filtern und Fragen zuordnen
+ * TODO Weitere Fragetypen einbauen
  */
 
 package de.christophjobst.main;
@@ -56,11 +56,11 @@ public class ElateXMLMain {
 		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
 
 		// Ausgabe des generierten XML
-		System.out.println("Output from XML File: ");
+		// System.out.println("Output from XML File: ");
 		m_complexTaskDef.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
 				Boolean.TRUE);
 		m_complexTaskDef.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
-		//m_complexTaskDef.marshal(complexTaskDef, System.out);
+		// m_complexTaskDef.marshal(complexTaskDef, System.out);
 
 		Writer w = null;
 		try {

@@ -22,9 +22,9 @@ public class ShortanswerToTextConverter {
 
 
 
-			if (question.getType().toString()
-					.equals("shortanswer")) {
-				System.out.println("Es ist ein shortanswer.");
+//			if (question.getType().toString()
+//					.equals("shortanswer")) {
+//				System.out.println("Es ist ein shortanswer.");
 
 				subTask = new TextSubTaskDef();
 
@@ -52,7 +52,7 @@ public class ShortanswerToTextConverter {
 						.getText().toString()
 						+ "_" + rand.getRandomID());
 
-			}
+//			}
 		
 		return subTask;
 	}

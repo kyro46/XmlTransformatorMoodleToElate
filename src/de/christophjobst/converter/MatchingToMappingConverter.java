@@ -25,8 +25,8 @@ public class MatchingToMappingConverter {
 
 		MappingSubTaskDef subTask = new MappingSubTaskDef();
 
-		if (question.getType().toString().equals("matching")) {
-			System.out.println("Es ist ein matching.");
+//		if (question.getType().toString().equals("matching")) {
+//			System.out.println("Es ist ein matching.");
 
 			// Allgemeine Angaben pro Frage
 			subTask.setTrash(false);
@@ -99,7 +99,7 @@ public class MatchingToMappingConverter {
 				subTask.getAssignment().add(assignmentObjectList.get(j));
 			}
 
-		}
+//		}
 
 		return subTask;
 	}

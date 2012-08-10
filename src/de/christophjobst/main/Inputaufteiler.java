@@ -4,12 +4,14 @@
  *
  * @author Christoph Jobst
  * @version 1.0
- * 
+ *
  */
 
 package de.christophjobst.main;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import de.christophjobst.converter.CategoryToCategoryConverter;
 import de.christophjobst.converter.ClozeToClozeConverter;
@@ -19,15 +21,6 @@ import de.christophjobst.converter.MultichoiceToMcConverter;
 import de.christophjobst.converter.ShortanswerToTextConverter;
 import de.christophjobst.converter.TruefalseToMcConverter;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.MappingTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.TextTaskBlock;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock.ClozeConfig;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.MappingTaskBlock.MappingConfig;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock.McConfig;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.McTaskBlock.McConfig.Different;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.Regular;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode;
 import generated.*;
@@ -69,150 +62,233 @@ public class Inputaufteiler {
 		complexTaskDef.setRevisions(revisions);
 		complexTaskDef.setTitle("Testklausur");
 
-		// Einheitliche Config für alle TaskBlock-Instanzen
-		Config generalTaskBlockConfig = new Config();
-		generalTaskBlockConfig.setNoOfSelectedTasks(100);
-		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
-		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
-		generalTaskBlockConfig.setPointsPerTask(5);
-		generalTaskBlockConfig.setPreserveOrder(false);
+		// Für Debugging, solange Fragezuordnung zu Category nicht geht
+		// complexTaskDef.getCategory().add(
+		// CategoryToCategoryConverter.processing(quizsammlung
+		// .getQuestion().get(0)));
 
-		// Kategorie hinzufügen
-		// TODO Abhängigkeit von Moodle-XML-Kategorien
-
-		// Vorbereitung ClozeTaskBlock
-		ClozeTaskBlock clozeTaskBlock = new ClozeTaskBlock();
-		clozeTaskBlock.setConfig(generalTaskBlockConfig);
-		ClozeConfig clozeConfig = new ClozeConfig();
-		clozeConfig.setIgnoreCase(true);
-		clozeConfig.setNegativePoints(0);
-		clozeTaskBlock.setClozeConfig(clozeConfig);
-
-		// Vorbereitung TextTaskBlock
-		TextTaskBlock essayTextTaskBlock = new TextTaskBlock();
-		essayTextTaskBlock.setConfig(generalTaskBlockConfig);
-
-		// Vorbereitung MappingTaskBlock
-		MappingTaskBlock mappingTaskBlock = new MappingTaskBlock();
-		mappingTaskBlock.setConfig(generalTaskBlockConfig);
-		MappingConfig mappingConfig = new MappingConfig();
-		mappingConfig.setNegativePoints(0);
-		mappingTaskBlock.setMappingConfig(mappingConfig);
-
-		// Vorbereitung McTaskBlock
-		McTaskBlock mcTaskBlock = new McTaskBlock();
-		mcTaskBlock.setConfig(generalTaskBlockConfig);
-		McConfig mcConfig = new McConfig();
-		Different different = new Different();
-		different.setCorrectAnswerNegativePoints(0);
-		different.setIncorrectAnswerNegativePoints(0);
-		mcConfig.setDifferent(different);
-		mcTaskBlock.setMcConfig(mcConfig);
-
-		// Vorbereitung ShortanswerTextTaskBlock
-		TextTaskBlock shortanswerTextTaskBlock = new TextTaskBlock();
-		shortanswerTextTaskBlock.setConfig(generalTaskBlockConfig);
-
-		// Vorbereitung TruefalseMcTaskBlock
-		McTaskBlock truefalseMcTaskBlock = new McTaskBlock();
-		truefalseMcTaskBlock.setConfig(generalTaskBlockConfig);
-		McConfig truefalseMcConfig = new McConfig();
-		Different truefalseDifferent = new Different();
-		truefalseDifferent.setCorrectAnswerNegativePoints(0);
-		truefalseDifferent.setIncorrectAnswerNegativePoints(0);
-		truefalseMcConfig.setDifferent(truefalseDifferent);
-		truefalseMcTaskBlock.setMcConfig(truefalseMcConfig);
-
-		//Für Debugging, solange Fragezuordnung zu Category nicht geht
-		complexTaskDef.getCategory().add(CategoryToCategoryConverter.processing(quizsammlung.getQuestion().get(0)));
-		
-		
-		// Zuweisungs- und Konvertierungsschleife
+		// Zuweisungs und Konvertierungsschleife für Category-Blöcke - BETA
+		List<String> categoryNameList = new ArrayList<String>();
+		List<CategoryManager> categoryManager = new ArrayList<CategoryManager>();
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
 			try {
-//				if (quizsammlung.getQuestion().get(i).getType().toString()
-//						.equals("category")) {
-//					complexTaskDef.getCategory().add(
-//							CategoryToCategoryConverter.processing(quizsammlung
-//									.getQuestion().get(i)));
-//				}
-
 				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("essay")) {
-					essayTextTaskBlock.getTextSubTaskDefOrChoice().add(
-							EssayToTextConverter.processing(quizsammlung
-									.getQuestion().get(i)));
-
-				}
-
-				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("cloze")) {
-					clozeTaskBlock.getClozeSubTaskDefOrChoice().add(
-							ClozeToClozeConverter.processing(quizsammlung
-									.getQuestion().get(i)));
-				}
-
-				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("truefalse")) {
-					truefalseMcTaskBlock.getMcSubTaskDefOrChoice().add(
-							TruefalseToMcConverter.processing(quizsammlung
-									.getQuestion().get(i)));
-				}
-
-				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("multichoice")) {
-					mcTaskBlock.getMcSubTaskDefOrChoice().add(
-							MultichoiceToMcConverter.processing(quizsammlung
-									.getQuestion().get(i)));
-
-				}
-
-				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("shortanswer")) {
-					shortanswerTextTaskBlock.getTextSubTaskDefOrChoice().add(
-							ShortanswerToTextConverter.processing(quizsammlung
-									.getQuestion().get(i)));
-				}
-
-				if (quizsammlung.getQuestion().get(i).getType().toString()
-						.equals("matching")) {
-					mappingTaskBlock.getMappingSubTaskDefOrChoice().add(
-							MatchingToMappingConverter.processing(quizsammlung
-									.getQuestion().get(i)));
-
+						.equals("category")
+						&& (!categoryNameList.contains(quizsammlung
+								.getQuestion().get(i).getCategory().getText()
+								.toString().substring(9)))) {
+					categoryNameList.add(quizsammlung.getQuestion().get(i)
+							.getCategory().getText().toString().substring(9));
+					categoryManager.add(new CategoryManager(
+							CategoryToCategoryConverter.processing(quizsammlung
+									.getQuestion().get(i))));
 				}
 
 			} catch (Exception e) {
-				System.out.println("PROBLEM BEIM INPUTAUFTEILER");
-				e.printStackTrace();
+				System.out.println("Problem beim Category-Parser");
 			}
 
 		}
 
-		// Essay to Text
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(essayTextTaskBlock);
-		// Shortanswer to Text
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(shortanswerTextTaskBlock);
-		// Cloze to Cloze
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(clozeTaskBlock);
-		// Matching to Mapping
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(mappingTaskBlock);
-		// Truefalse to Mc
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(truefalseMcTaskBlock);
-		// Multichoice to Mc
-		complexTaskDef.getCategory().get(0)
-				.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
-				.add(mcTaskBlock);
+		// Internal Debuggingcode
+		for (int i = 0; i < categoryManager.toArray().length; i++) {
+			System.out.println(categoryManager.get(i).getTitle());
+		}
+
+		System.out.println("..................");
+
+		for (String categoryName : categoryNameList) {
+			System.out.println(categoryName);
+		}
+
+		for (int i = 0; i < categoryManager.toArray().length; i++) {
+			System.out.println(i
+					+ " "
+					+ categoryManager.get(i).getTitle()
+							.equals(categoryNameList.get(i)));
+		}
+		// Internal Debuggingcode Ende
+
+		// Zuweisungs- und Konvertierungsschleife für Fragen
+		int belongingCategoryIndex = 0;
+		for (int j = 0; j < quizsammlung.getQuestion().toArray().length; j++) {
+			try {
+
+				if (quizsammlung.getQuestion().get(j).getType().toString()
+						.equals("category")) {
+
+					for (int k = 0; k < categoryManager.toArray().length; k++) {
+						if (categoryManager
+								.get(k)
+								.getTitle()
+								.equals(quizsammlung.getQuestion().get(j)
+										.getCategory().getText().toString()
+										.substring(9))) {
+							belongingCategoryIndex = k;
+						}
+					}
+
+					for (int i = j + 1; i < quizsammlung.getQuestion()
+							.toArray().length; i++) {
+
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("essay")) {
+
+							categoryManager
+									.get(belongingCategoryIndex)
+									.getTextTaskBlock()
+									.getTextSubTaskDefOrChoice()
+									.add(EssayToTextConverter
+											.processing(quizsammlung
+													.getQuestion().get(i)));
+							categoryManager.get(belongingCategoryIndex)
+									.setHasTextTaskBlock(true);
+							System.out.println("Categoryblock nummer "
+									+ belongingCategoryIndex
+									+ " hat nun "
+									+ categoryManager
+											.get(belongingCategoryIndex)
+											.getTextTaskBlock()
+											.getTextSubTaskDefOrChoice()
+											.toArray().length + " textfragen");
+						}
+
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("cloze")) {
+							categoryManager
+									.get(belongingCategoryIndex)
+									.getClozeTaskBlock()
+									.getClozeSubTaskDefOrChoice()
+									.add(ClozeToClozeConverter
+											.processing(quizsammlung
+													.getQuestion().get(i)));
+							categoryManager.get(belongingCategoryIndex)
+									.setHasClozeTaskBlock(true);
+							System.out.println("Categoryblock nummer "
+									+ belongingCategoryIndex
+									+ " hat nun "
+									+ categoryManager
+											.get(belongingCategoryIndex)
+											.getTextTaskBlock()
+											.getTextSubTaskDefOrChoice()
+											.toArray().length + " clozefragen");
+
+						}
+
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("truefalse")) {
+							categoryManager
+									.get(belongingCategoryIndex)
+									.getMcTaskBlock()
+									.getMcSubTaskDefOrChoice()
+									.add(TruefalseToMcConverter
+											.processing(quizsammlung
+													.getQuestion().get(i)));
+							categoryManager.get(belongingCategoryIndex)
+									.setHasMcTaskBlock(true);
+							System.out.println("Categoryblock nummer "
+									+ belongingCategoryIndex
+									+ " hat nun "
+									+ categoryManager
+											.get(belongingCategoryIndex)
+											.getTextTaskBlock()
+											.getTextSubTaskDefOrChoice()
+											.toArray().length
+									+ " truefalsefragen");
+
+						}
+
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("multichoice")) {
+							categoryManager
+									.get(belongingCategoryIndex)
+									.getMcTaskBlock()
+									.getMcSubTaskDefOrChoice()
+									.add(MultichoiceToMcConverter
+											.processing(quizsammlung
+													.getQuestion().get(i)));
+							categoryManager.get(belongingCategoryIndex)
+									.setHasMcTaskBlock(true);
+							System.out.println("Categoryblock nummer "
+									+ belongingCategoryIndex
+									+ " hat nun "
+									+ categoryManager
+											.get(belongingCategoryIndex)
+											.getTextTaskBlock()
+											.getTextSubTaskDefOrChoice()
+											.toArray().length + " mcfragen");
+
+						}
+
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("shortanswer")) {
+
+							categoryManager
+									.get(belongingCategoryIndex)
+									.getTextTaskBlock()
+									.getTextSubTaskDefOrChoice()
+									.add(ShortanswerToTextConverter
+											.processing(quizsammlung
+													.getQuestion().get(i)));
+							categoryManager.get(belongingCategoryIndex)
+									.setHasTextTaskBlock(true);
+
+						}
+
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("matching")) {
+
+							categoryManager
+									.get(belongingCategoryIndex)
+									.getMappingTaskBlock()
+									.getMappingSubTaskDefOrChoice()
+									.add(MatchingToMappingConverter
+											.processing(quizsammlung
+													.getQuestion().get(i)));
+							categoryManager.get(belongingCategoryIndex)
+									.setHasMappingTaskBlock(true);
+						}
+						if (quizsammlung.getQuestion().get(i).getType()
+								.toString().equals("category")) {
+							// TODO Das ruft nach Rekursion
+							break;
+						}
+					}
+				}
+			} catch (Exception e) {
+				System.out.println("PROBLEM BEIM INPUTAUFTEILER");
+				e.printStackTrace();
+			}
+		}
+
+		// // Essay to Text
+		// complexTaskDef.getCategory().get(0)
+		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
+		// .add(essayTextTaskBlock);
+		// // Shortanswer to Text
+		// complexTaskDef.getCategory().get(0)
+		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
+		// .add(shortanswerTextTaskBlock);
+		// // Cloze to Cloze
+		// complexTaskDef.getCategory().get(0)
+		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
+		// .add(clozeTaskBlock);
+		// // Matching to Mapping
+		// complexTaskDef.getCategory().get(0)
+		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
+		// .add(mappingTaskBlock);
+		// // Truefalse to Mc
+		// complexTaskDef.getCategory().get(0)
+		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
+		// .add(truefalseMcTaskBlock);
+		// // Multichoice to Mc
+		// complexTaskDef.getCategory().get(0)
+		// .getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock()
+		// .add(mcTaskBlock);
+
+		for (CategoryManager categoryMana : categoryManager) {
+			complexTaskDef.getCategory().add(categoryMana.generateCategory());
+		}
 
 		return complexTaskDef;
 	}

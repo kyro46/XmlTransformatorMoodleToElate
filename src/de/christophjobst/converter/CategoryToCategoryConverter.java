@@ -13,11 +13,11 @@ public class CategoryToCategoryConverter {
 
 		ComplexTaskDef.Category category = new ComplexTaskDef.Category();
 
-		if (question.getType().toString().equals("category")) {
-			System.out.println("Es ist ein category.");
-		}
+//		if (question.getType().toString().equals("category")) {
+//			System.out.println("Es ist ein category.");
+//		}
 
-		category.setTitle(question.getCategory().getText());
+		category.setTitle(question.getCategory().getText().substring(9));
 		category.setId("Kategorie_" + rand.getRandomID());
 		category.setIgnoreOrderOfBlocks(false);
 		category.setMixAllSubTasks(false);
