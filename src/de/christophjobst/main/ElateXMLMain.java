@@ -30,12 +30,12 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	//private static final String QUIZ_XML = "./roma4.xml";
+	private static final String QUIZ_XML = "./roma2.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
 
-		final String QUIZ_XML = "./" + args[0];
+		//final String QUIZ_XML = "./" + args[0];
 
 		// JAXB Context für Moodle-Quiz
 		JAXBContext context_quiz = JAXBContext.newInstance(Quiz.class);
