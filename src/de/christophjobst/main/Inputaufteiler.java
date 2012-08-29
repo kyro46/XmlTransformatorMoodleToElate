@@ -70,7 +70,7 @@ public class Inputaufteiler {
 		 * categoryManager
 		 */
 		List<String> categoryNameList = new ArrayList<String>();
-		List<CategoryManager> categoryManager = new ArrayList<CategoryManager>();
+		List<CategoryManager> categoryManagerList = new ArrayList<CategoryManager>();
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
 			try {
 				if (quizsammlung.getQuestion().get(i).getType().toString()
@@ -80,7 +80,7 @@ public class Inputaufteiler {
 								.toString().substring(9)))) {
 					categoryNameList.add(quizsammlung.getQuestion().get(i)
 							.getCategory().getText().toString().substring(9));
-					categoryManager.add(new CategoryManager(
+					categoryManagerList.add(new CategoryManager(
 							CategoryToCategoryConverter.processing(quizsammlung
 									.getQuestion().get(i))));
 				}
@@ -108,8 +108,8 @@ public class Inputaufteiler {
 					 * Abgleich: Ist zu welchem Objekt im categoryManager gehört
 					 * die aktuell gefundene Category?
 					 */
-					for (int k = 0; k < categoryManager.toArray().length; k++) {
-						if (categoryManager
+					for (int k = 0; k < categoryManagerList.toArray().length; k++) {
+						if (categoryManagerList
 								.get(k)
 								.getTitle()
 								.equals(quizsammlung.getQuestion().get(j)
@@ -129,14 +129,14 @@ public class Inputaufteiler {
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("essay")) {
 
-							categoryManager
+							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getTextTaskBlock()
 									.getTextSubTaskDefOrChoice()
 									.add(EssayToTextConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
-							categoryManager.get(belongingCategoryIndex)
+							categoryManagerList.get(belongingCategoryIndex)
 									.setHasTextTaskBlock(true);
 							// Debug:
 							// System.out.println("Categoryblock nummer "
@@ -151,40 +151,40 @@ public class Inputaufteiler {
 
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("cloze")) {
-							categoryManager
+							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getClozeTaskBlock()
 									.getClozeSubTaskDefOrChoice()
 									.add(ClozeToClozeConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
-							categoryManager.get(belongingCategoryIndex)
+							categoryManagerList.get(belongingCategoryIndex)
 									.setHasClozeTaskBlock(true);
 						}
 
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("truefalse")) {
-							categoryManager
+							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getMcTaskBlock()
 									.getMcSubTaskDefOrChoice()
 									.add(TruefalseToMcConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
-							categoryManager.get(belongingCategoryIndex)
+							categoryManagerList.get(belongingCategoryIndex)
 									.setHasMcTaskBlock(true);
 						}
 
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("multichoice")) {
-							categoryManager
+							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getMcTaskBlock()
 									.getMcSubTaskDefOrChoice()
 									.add(MultichoiceToMcConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
-							categoryManager.get(belongingCategoryIndex)
+							categoryManagerList.get(belongingCategoryIndex)
 									.setHasMcTaskBlock(true);
 
 						}
@@ -192,14 +192,14 @@ public class Inputaufteiler {
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("shortanswer")) {
 
-							categoryManager
+							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getTextTaskBlock()
 									.getTextSubTaskDefOrChoice()
 									.add(ShortanswerToTextConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
-							categoryManager.get(belongingCategoryIndex)
+							categoryManagerList.get(belongingCategoryIndex)
 									.setHasTextTaskBlock(true);
 
 						}
@@ -207,14 +207,14 @@ public class Inputaufteiler {
 						if (quizsammlung.getQuestion().get(i).getType()
 								.toString().equals("matching")) {
 
-							categoryManager
+							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getMappingTaskBlock()
 									.getMappingSubTaskDefOrChoice()
 									.add(MatchingToMappingConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
-							categoryManager.get(belongingCategoryIndex)
+							categoryManagerList.get(belongingCategoryIndex)
 									.setHasMappingTaskBlock(true);
 						}
 						if (quizsammlung.getQuestion().get(i).getType()
@@ -249,9 +249,10 @@ public class Inputaufteiler {
 			}
 		}
 
-		for (CategoryManager categoryMana : categoryManager) {
-			complexTaskDef.getCategory().add(categoryMana.generateCategory());
-		}
+		//Alle Category in der Liste hinzufügen
+		//Hier Auswahl, ob flach oder geschachtelt
+		complexTaskDef = CategoryAssignment.assignSubCategories(complexTaskDef, categoryManagerList);
+		complexTaskDef = CategoryAssignment.assignFlatCategories(complexTaskDef, categoryManagerList);
 
 		return complexTaskDef;
 	}

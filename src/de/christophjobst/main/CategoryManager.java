@@ -1,5 +1,8 @@
 package de.christophjobst.main;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Category.ClozeTaskBlock;
@@ -20,6 +23,10 @@ public class CategoryManager {
 	boolean hasClozeTaskBlock = false;
 	boolean hasMappingTaskBlock = false;
 	String title;
+	
+	//Für die Zuordnung der Unterkategorien
+	List<Integer> subCategoryList = new ArrayList<Integer>();
+	
 	MappingTaskBlock mappingTaskBlock = new MappingTaskBlock();
 	McTaskBlock mcTaskBlock = new McTaskBlock();
 	TextTaskBlock textTaskBlock = new TextTaskBlock();
