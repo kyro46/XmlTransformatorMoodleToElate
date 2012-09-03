@@ -5,6 +5,7 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
+ * TODO Metadatablock in ComplexTaskDef einfügen
  * TODO Mehrere Schachtelungsebenen für Category übernehmen, sobald complexTaskDef.xsd final
  * TODO Weitere Fragetypen einbauen
  * TODO Innere Inputaufteiler-Schleife rekursiv machen
