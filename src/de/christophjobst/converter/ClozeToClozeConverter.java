@@ -9,7 +9,6 @@
 package de.christophjobst.converter;
 
 import java.io.UnsupportedEncodingException;
-import java.util.*;
 
 import generated.Quiz.Question;
 import de.christophjobst.main.RandomIdentifierGenerator;
