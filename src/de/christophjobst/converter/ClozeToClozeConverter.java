@@ -8,7 +8,6 @@
 
 package de.christophjobst.converter;
 
-
 import java.io.UnsupportedEncodingException;
 import java.util.*;
 
@@ -19,121 +18,119 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef.Cloze.
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef;
 
 public class ClozeToClozeConverter {
-	
-	
+
 	public static ClozeSubTaskDef processing(Question question) {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		ClozeSubTaskDef subTask = new ClozeSubTaskDef();
 
-//		if (question.getType().toString().equals("cloze")) {
-//			System.out.println("Es ist ein cloze.");
+		// Allgemeine Angaben pro Frage
+		subTask.setTrash(false);
+		subTask.setInteractiveFeedback(false);
+		subTask.setCorrectionHint(" ");
+		subTask.setHint(question.getName().getText().toString());
 
-			// Allgemeine Angaben pro Frage
-			subTask.setTrash(false);
-			subTask.setInteractiveFeedback(false);
-			subTask.setCorrectionHint(" ");
-			subTask.setHint(question.getName().getText().toString());
+		// Spezielle Angaben pro Frage
+		subTask.setId(question.getName().getText().toString() + "_"
+				+ rand.getRandomID());
 
-			// Spezielle Angaben pro Frage
-			subTask.setId(question.getName().getText().toString() + "_"
-					+ rand.getRandomID());
+		String problem = "Lösen Sie folgenden Lückentext.";
+		// Konvertierung des String in separaten Block,
+		// falls bei häufiger Nutzung Auslagerung nötig
+		try {
+			byte[] bytes = problem.getBytes("UTF-8");
+			problem = new String(bytes);
+			// System.out.println(problem);
+			subTask.setProblem(problem);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 
-			String problem = "Lösen Sie folgenden Lückentext.";
-			//Konvertierung des String in separaten Block,
-			//falls bei häufiger Nutzung Auslagerung nötig
-				try {
-					byte[] bytes = problem.getBytes("UTF-8");
-					problem = new String(bytes);
-//					System.out.println(problem);
-					subTask.setProblem(problem);
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
+		subTask.setCloze(clozeParser(question.getQuestiontext().getText()));
 
-			// Stringoperationen, um die in die Aufgabenstellung
-			// eingebetteten Lösungsphrasen der Lücken zu extrahieren
-			List<String> list = new ArrayList<String>();
-			list = clozeAufloeser(question.getQuestiontext().getText());
-
-			// Schleife um die Stringfelder den Text und Gap-Elementen
-			// zuzuweisen
-			Cloze cloze = new Cloze();
-			for (int j = 0; j < list.toArray().length; j++) {
-				Gap gap = new Gap();
-
-				if (j % 2 == 1) {
-					gap.getCorrect().add(list.get(j));
-					gap.setIgnoreCase(true);
-					cloze.getTextOrGap().add(gap);
-				} else {
-
-					cloze.getTextOrGap().add(list.get(j));
-				}
-			}
-
-			subTask.setCloze(cloze);
-
-			list = new ArrayList<String>();
-
-//		}
 
 		return subTask;
 	}
 
-	private static List<String> clozeAufloeser(String moodletext) {
+	private static Cloze clozeParser(String moodleText) {
 
-		List<String> list = new ArrayList<String>();
+		Cloze cloze = new Cloze();
+		int klammeraufindex = 0;
+		int klammerzuindex = 0;
 
-		/*
-		 * Falls aus Moodle zusätzliche Formate mit Feedback für
-		 * Richtige/Falsche/"Halbrichtige" Antworten etc extrahiert werden
-		 * sollen (alles in {} im Aufgabentext eingebettett), eine eigene
-		 * Datenstruktur dafür anlegen und hinterher ggfs in den CorrectionHint
-		 * schreiben
-		 */
-
-		int endShortanswerIndex = 0;
-		int startShortanswerIndex = 0;
-		String shortanswer = new String();
-		String text = new String();
+		int shortanswerindex = 0;
+		int multichoiceindex = 0;
+		int numericalindex = 0;
+		int gapIndexToUse = 0;
+		
+		shortanswerindex = moodleText.indexOf(":SHORTANSWER:");
+		multichoiceindex = moodleText.indexOf(":MULTICHOICE:");
+		numericalindex = moodleText.indexOf(":NUMERICAL:");		
+		
+		
+		// Die { und } suchen nachdem man :SHORTANSWER: :MULTICHOICE: oder
+		// :NUMERICAL: gefunden hat
 
 		do {
-			// Index für den Beginn des nächsten Shortanswer-Bereiches bekommen
-			startShortanswerIndex = moodletext.indexOf("SHORTANSWER",
-					endShortanswerIndex);
-			// System.out.println(startShortanswerIndex);
+			gapIndexToUse = Math.max(shortanswerindex, Math.max(multichoiceindex, numericalindex));
 
-			// Fragetext bis zur Shortanswer extrahieren
-			if (startShortanswerIndex == -1) {
-				// Ende des Strings erreicht
-				text = moodletext.substring(endShortanswerIndex + 1);
-				list.add(text);
+				klammeraufindex = moodleText.lastIndexOf("{", gapIndexToUse);
 
-			} else {
-				if (endShortanswerIndex == 0) {
-					text = moodletext.substring(endShortanswerIndex,
-							startShortanswerIndex - 3);
+				if (klammeraufindex != -1) {
+
+					if (klammerzuindex == 0) {
+						cloze.getTextOrGap().add(
+								moodleText.substring(klammerzuindex,
+										klammeraufindex));
+					} else {
+						cloze.getTextOrGap().add(
+								moodleText.substring(klammerzuindex + 1,
+										klammeraufindex));
+					}
+
+					klammerzuindex = moodleText.indexOf("}", klammeraufindex);
+					cloze.getTextOrGap().add(
+							gapBuilder(moodleText.substring(klammeraufindex+1,
+									klammerzuindex)));
 				} else {
-
-					text = moodletext.substring(endShortanswerIndex + 1,
-							startShortanswerIndex - 3);
+					cloze.getTextOrGap().add(
+							moodleText.substring(klammerzuindex + 1));
 				}
-				// Die Antwort extrahieren, Ausgangsformat:
-				// {1:SHORTANSWER:=Genera}.
-				// Indizes: {1:^S^HORTANSWER:=Genera^}^
-				shortanswer = moodletext.substring(startShortanswerIndex + 13,
-						moodletext.indexOf("}", startShortanswerIndex));
-				endShortanswerIndex = moodletext.indexOf("}",
-						startShortanswerIndex);
 
-				list.add(text);
-				list.add(shortanswer);
+			shortanswerindex = moodleText.indexOf(":SHORTANSWER:",gapIndexToUse+1);
+			multichoiceindex = moodleText.indexOf(":MULTICHOICE:",gapIndexToUse+1);
+			numericalindex = moodleText.indexOf(":NUMERICAL:", gapIndexToUse+1);
+			
+		} while (klammeraufindex != -1);
+		return cloze;
+	}
+
+	private static Gap gapBuilder(String input) {
+
+		Gap gap = new Gap();
+		gap.setIgnoreCase(true);
+		String correctAnswer;
+
+		int nextAnswer = 0;
+		System.out.println(input);
+		while((nextAnswer = input.indexOf("=",nextAnswer+1)) != -1){
+
+			if (input.indexOf("=",nextAnswer+1) == -1){
+			correctAnswer = input.substring(nextAnswer+1);
+			System.out.println(correctAnswer);
+			} else {
+				correctAnswer = input.substring(nextAnswer+1, input.indexOf("=",nextAnswer+1));
+				System.out.println(correctAnswer);
 			}
 
-		} while (startShortanswerIndex != -1);
+			gap.getCorrect().add(correctAnswer);
+			
+			correctAnswer = new String();
 
-		return list;
+		}
+		
+		return gap;
 	}
+
 }
