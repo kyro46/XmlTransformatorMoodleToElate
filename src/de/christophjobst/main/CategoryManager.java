@@ -1,5 +1,5 @@
 /**
- * Programm zur Konvertierung von aus Moodle exportierten Übungsfragen (Moodle-XML)
+ * Programm zur Konvertierung von aus Moodle exportierten Ãœbungsfragen (Moodle-XML)
  * in Elate ComplexTaskDef-XML.
  *
  * @author Christoph Jobst
@@ -8,6 +8,7 @@
 
 package de.christophjobst.main;
 
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.AddonTaskBlock;
 import de.thorstenberger.taskmodel.complex.complextaskdef.Config;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.ClozeTaskBlock;
@@ -26,20 +27,23 @@ public class CategoryManager {
 	boolean hasMcTaskBlock = false;
 	boolean hasClozeTaskBlock = false;
 	boolean hasMappingTaskBlock = false;
+	boolean hasAddonTaskBlock = false;
+
 	String title;
 	MappingTaskBlock mappingTaskBlock = new MappingTaskBlock();
 	McTaskBlock mcTaskBlock = new McTaskBlock();
 	TextTaskBlock textTaskBlock = new TextTaskBlock();
 	ClozeTaskBlock clozeTaskBlock = new ClozeTaskBlock();
+	AddonTaskBlock addonTaskBlock = new AddonTaskBlock();
 
 	public CategoryManager(Category category) {
 		this.title = category.getTitle().toString();
 		this.category = category;
-		// Einheitliche Config für alle TaskBlock-Instanzen
+		// Einheitliche Config fÃ¼r alle TaskBlock-Instanzen
 		Config generalTaskBlockConfig = new Config();
 		generalTaskBlockConfig.setNoOfSelectedTasks(100);
-		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
-		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
+		// TODO Punkte = Anzahl der LÃ¼cken/Matchings - inkonsistent, da in
+		// Frageinstanzen nicht einheitlich viele LÃ¼cken/Matchings
 		generalTaskBlockConfig.setPointsPerTask(5);
 		generalTaskBlockConfig.setPreserveOrder(false);
 
@@ -67,6 +71,10 @@ public class CategoryManager {
 		different.setIncorrectAnswerNegativePoints(0);
 		mcConfig.setDifferent(different);
 		mcTaskBlock.setMcConfig(mcConfig);
+
+		// Vorbereitung AddonTaskBlock
+		addonTaskBlock.setConfig(generalTaskBlockConfig);
+
 	}
 
 	public boolean isHasTextTaskBlock() {
@@ -141,6 +149,18 @@ public class CategoryManager {
 		this.clozeTaskBlock = clozeTaskBlock;
 	}
 
+	public boolean isHasAddonTaskBlock() {
+		return hasAddonTaskBlock;
+	}
+
+	public void setHasAddonTaskBlock(boolean hasAddonTaskBlock) {
+		this.hasAddonTaskBlock = hasAddonTaskBlock;
+	}
+
+	public AddonTaskBlock getAddonTaskBlock() {
+		return addonTaskBlock;
+	}
+
 	public Category generateCategory() {
 		if (hasClozeTaskBlock) {
 			category.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().add(
@@ -157,6 +177,10 @@ public class CategoryManager {
 		if (hasMcTaskBlock) {
 			category.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().add(
 					mcTaskBlock);
+		}
+		if (hasAddonTaskBlock) {
+			category.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().add(
+					addonTaskBlock);
 		}
 		return category;
 	}

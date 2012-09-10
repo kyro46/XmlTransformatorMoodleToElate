@@ -1,14 +1,15 @@
 /**
- * Programm zur Konvertierung von aus Moodle exportierten Übungsfragen (Moodle-XML)
+ * Programm zur Konvertierung von aus Moodle exportierten ï¿½bungsfragen (Moodle-XML)
  * in Elate ComplexTaskDef-XML.
  *
  * @author Christoph Jobst
  * @version 1.0
  * 
- * TODO Metadatablock in ComplexTaskDef einfügen
- * TODO Mehrere Schachtelungsebenen für Category übernehmen, sobald complexTaskDef.xsd final
+ * TODO Metadatablock in ComplexTaskDef einfÃ¼gen
+ * TODO Mehrere Schachtelungsebenen fÃ¼r Category Ã¼bernehmen, sobald complexTaskDef.xsd final
  * TODO Weitere Fragetypen einbauen
- * TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in Frageinstanzen nicht einheitlich viele Lücken/Matchings
+ * TODO Punkte = Anzahl der LÃ¼cken/Matchings - inkonsistent, da in Frageinstanzen nicht einheitlich viele LÃ¼cken/Matchings
+ * TODO Moodlebilder aus Version 2.3 in den HTML-Code schreiben. Siehe: http://aktuell.de.selfhtml.org/artikel/grafik/inline-images/
  */
 
 package de.christophjobst.main;
@@ -31,21 +32,21 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	//private static final String QUIZ_XML = "./roma2.xml";
-	//private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
+	private static final String QUIZ_XML = "./unsere_fragen_aus_moodle.xml";
+	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
 
 		//Beispiel: >> XmlTransformatorMoodleToElate.jar input.xml output.xml
-		final String QUIZ_XML = "./" + args[0];
-		final String COMPLEXTASKDEF_XML = "./" + args[1];
+		//final String QUIZ_XML = "./" + args[0];
+		//final String COMPLEXTASKDEF_XML = "./" + args[1];
 
-		// JAXB Context für Moodle-Quiz
+		// JAXB Context fï¿½r Moodle-Quiz
 		JAXBContext context_quiz = JAXBContext.newInstance(Quiz.class);
 		Unmarshaller um_quiz = context_quiz.createUnmarshaller();
 		Quiz quizsammlung = (Quiz) um_quiz.unmarshal(new FileReader(QUIZ_XML));
 
-		// JAXB Context und Marshaller für ComplexTaskDef
+		// JAXB Context und Marshaller fï¿½r ComplexTaskDef
 		JAXBContext context_complexTaskDef = JAXBContext
 				.newInstance(ComplexTaskDef.class);
 		Marshaller m_complexTaskDef = context_complexTaskDef.createMarshaller();
@@ -78,5 +79,6 @@ public class ElateXMLMain {
 			} catch (Exception e) {
 			}
 		}
-	}
+	System.out.println("Done");
+	}	
 }
