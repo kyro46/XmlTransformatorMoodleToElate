@@ -5,5 +5,10 @@
 // Generated on: 2012.08.03 at 01:32:53 PM MESZ 
 //
 
+//@javax.xml.bind.annotation.XmlSchema(namespace = "", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
+//package de.thorstenberger.taskmodel.complex.complextaskdef;
+
+
+
 @javax.xml.bind.annotation.XmlSchema(namespace = "http://complex.taskmodel.thorstenberger.de/complexTaskDef", elementFormDefault = javax.xml.bind.annotation.XmlNsForm.QUALIFIED)
 package de.thorstenberger.taskmodel.complex.complextaskdef;

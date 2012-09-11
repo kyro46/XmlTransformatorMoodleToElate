@@ -1,5 +1,5 @@
 /**
- * Programm zur Konvertierung von aus Moodle exportierten Übungsfragen (Moodle-XML)
+ * Programm zur Konvertierung von aus Moodle exportierten ï¿½bungsfragen (Moodle-XML)
  * in Elate ComplexTaskDef-XML.
  *
  * @author Christoph Jobst
@@ -8,13 +8,21 @@
 
 package de.christophjobst.converter;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
+
 import generated.Quiz.Question;
+import de.christophjobst.main.Base64Relocator;
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.McSubTaskDef;
 
 public class MultichoiceToMcConverter {
 
-	public static McSubTaskDef processing(Question question) {
+	public static McSubTaskDef processing(Question question) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
@@ -22,10 +30,6 @@ public class MultichoiceToMcConverter {
 
 		McSubTaskDef.Correct correct = new McSubTaskDef.Correct();
 		McSubTaskDef.Incorrect incorrect = new McSubTaskDef.Incorrect();
-
-		// if (question.getType().toString()
-		// .equals("multichoice")) {
-		// System.out.println("Es ist ein multichoice.");
 
 		// Allgemeine Angaben pro Frage
 		subTask.setTrash(false);
@@ -37,7 +41,7 @@ public class MultichoiceToMcConverter {
 				: "multipleSelect");
 
 		// Spezielle Angaben pro Frage
-		subTask.setProblem(question.getQuestiontext().getText().toString());
+		subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext()));
 		subTask.setHint(question.getName().getText().toString());
 		subTask.setId(question.getName().getText().toString() + "_"
 				+ rand.getRandomID());
@@ -60,13 +64,12 @@ public class MultichoiceToMcConverter {
 
 		}
 		
-		/* Sonderfall: Singlechoice-Aufgabe mit mehreren angezeigten korrekten Lösungen
+		/* Sonderfall: Singlechoice-Aufgabe mit mehreren angezeigten korrekten Lï¿½sungen
 		 * Kann so nicht abgebildet werden - daher Umwandlung zur multichoice-Aufgabe
 		 */
 		if (correctAnswerCount > 1) {
 			subTask.setCategory("multipleSelect");
 		}
-		// }
 
 		return subTask;
 	}

@@ -19,9 +19,11 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.*;
 
 import generated.*;
 
+import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.StringWriter;
 import java.io.Writer;
 
 import javax.xml.bind.JAXBContext;
@@ -46,7 +48,7 @@ public class ElateXMLMain {
 		Unmarshaller um_quiz = context_quiz.createUnmarshaller();
 		Quiz quizsammlung = (Quiz) um_quiz.unmarshal(new FileReader(QUIZ_XML));
 
-		// JAXB Context und Marshaller f�r ComplexTaskDef
+		// JAXB Context und Marshaller für ComplexTaskDef
 		JAXBContext context_complexTaskDef = JAXBContext
 				.newInstance(ComplexTaskDef.class);
 		Marshaller m_complexTaskDef = context_complexTaskDef.createMarshaller();
@@ -69,16 +71,50 @@ public class ElateXMLMain {
 		m_complexTaskDef.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 		// m_complexTaskDef.marshal(complexTaskDef, System.out);
 
+		
+		
+		//Nachbearbeitung wegen der Namespaces
+		StringWriter sw = new StringWriter();
+        m_complexTaskDef.marshal(complexTaskDef, sw);
+        String result = sw.toString();
+        //System.out.println(result);
+        result = result.replaceAll(" xmlns=\"\" xmlns:ns2=\"http://complex.taskmodel.thorstenberger.de/complexTaskDef\"", "");
+		
+		
 		Writer w = null;
 		try {
 			w = new FileWriter(COMPLEXTASKDEF_XML);
-			m_complexTaskDef.marshal(complexTaskDef, w);
+			w.write(result);
 		} finally {
 			try {
 				w.close();
 			} catch (Exception e) {
 			}
 		}
+		
+		
+
+
+		
 	System.out.println("Done");
 	}	
+	
+	//http://www.dzone.com/snippets/java-read-file-string
+    private static String readFileAsString(String filePath)
+    throws java.io.IOException{
+        StringBuffer fileData = new StringBuffer(1000);
+        BufferedReader reader = new BufferedReader(
+                new FileReader(filePath));
+        char[] buf = new char[1024];
+        int numRead=0;
+        while((numRead=reader.read(buf)) != -1){
+            String readData = String.valueOf(buf, 0, numRead);
+            fileData.append(readData);
+            buf = new char[1024];
+        }
+        reader.close();
+        return fileData.toString();
+    }
+	
+	
 }

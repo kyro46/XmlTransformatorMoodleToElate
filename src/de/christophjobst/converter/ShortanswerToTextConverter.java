@@ -1,5 +1,5 @@
 /**
- * Programm zur Konvertierung von aus Moodle exportierten Übungsfragen (Moodle-XML)
+ * Programm zur Konvertierung von aus Moodle exportierten Ãœbungsfragen (Moodle-XML)
  * in Elate ComplexTaskDef-XML.
  *
  * @author Christoph Jobst
@@ -19,12 +19,6 @@ public class ShortanswerToTextConverter {
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		TextSubTaskDef subTask = new TextSubTaskDef();
-
-
-
-//			if (question.getType().toString()
-//					.equals("shortanswer")) {
-//				System.out.println("Es ist ein shortanswer.");
 
 				subTask = new TextSubTaskDef();
 
@@ -51,8 +45,6 @@ public class ShortanswerToTextConverter {
 				subTask.setId(question.getName()
 						.getText().toString()
 						+ "_" + rand.getRandomID());
-
-//			}
 		
 		return subTask;
 	}

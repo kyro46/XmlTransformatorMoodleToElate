@@ -1,5 +1,5 @@
 /**
- * Programm zur Konvertierung von aus Moodle exportierten Übungsfragen (Moodle-XML)
+ * Programm zur Konvertierung von aus Moodle exportierten ï¿½bungsfragen (Moodle-XML)
  * in Elate ComplexTaskDef-XML.
  *
  * @author Christoph Jobst
@@ -8,10 +8,17 @@
 
 package de.christophjobst.converter;
 
+import java.io.IOException;
 import java.util.*;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
 
 import generated.Quiz.Question;
 
+import de.christophjobst.main.Base64Relocator;
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.MappingSubTaskDef.Concept;
 import de.thorstenberger.taskmodel.complex.complextaskdef.MappingSubTaskDef.Assignment;
@@ -19,14 +26,11 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.MappingSubTaskDef;
 
 public class MatchingToMappingConverter {
 
-	public static MappingSubTaskDef processing(Question question) {
+	public static MappingSubTaskDef processing(Question question) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		MappingSubTaskDef subTask = new MappingSubTaskDef();
-
-//		if (question.getType().toString().equals("matching")) {
-//			System.out.println("Es ist ein matching.");
 
 			// Allgemeine Angaben pro Frage
 			subTask.setTrash(false);
@@ -38,7 +42,7 @@ public class MatchingToMappingConverter {
 			subTask.setId(question.getName().getText().toString() + "_"
 					+ rand.getRandomID());
 
-			subTask.setProblem(question.getQuestiontext().getText());
+			subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext()));
 
 			Concept concept = new Concept();
 			Assignment assignment = new Assignment();
@@ -46,7 +50,7 @@ public class MatchingToMappingConverter {
 			/*
 			 * 1. lies alle assignments ein und gib ihnen eine id 2. wenn ein
 			 * string schon vorhanden, tue nichts 3. lies die concepts ein und
-			 * suche bei den assignments nach der Lösung 4. weise die LösungsID
+			 * suche bei den assignments nach der LÃ¶sung 4. weise die LÃ¶sungsID
 			 * dem concept zu
 			 */
 			List<String> assignmentList = new ArrayList<String>();
@@ -91,15 +95,13 @@ public class MatchingToMappingConverter {
 				concept = new Concept();
 			}
 
-			// Assignments zufällig anordnen
+			// Assignments zufÃ¤llig anordnen
 			Collections.shuffle(assignmentObjectList);
 
 			// Assignemntobjekte der SubTask zuordnen
 			for (int j = 0; j < assignmentObjectList.toArray().length; j++) {
 				subTask.getAssignment().add(assignmentObjectList.get(j));
 			}
-
-//		}
 
 		return subTask;
 	}

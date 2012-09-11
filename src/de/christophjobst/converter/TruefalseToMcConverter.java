@@ -1,5 +1,5 @@
 /**
- * Programm zur Konvertierung von aus Moodle exportierten Übungsfragen (Moodle-XML)
+ * Programm zur Konvertierung von aus Moodle exportierten Ãœbungsfragen (Moodle-XML)
  * in Elate ComplexTaskDef-XML.
  *
  * @author Christoph Jobst
@@ -8,22 +8,27 @@
 
 package de.christophjobst.converter;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
+
 import generated.Quiz.Question;
+import de.christophjobst.main.Base64Relocator;
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.McSubTaskDef;
 
 public class TruefalseToMcConverter {
 
-	public static McSubTaskDef processing(Question question) {
+	public static McSubTaskDef processing(Question question) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
 		McSubTaskDef subTask = new McSubTaskDef();
 		McSubTaskDef.Correct correct = new McSubTaskDef.Correct();
 		McSubTaskDef.Incorrect incorrect = new McSubTaskDef.Incorrect();
-
-//		if (question.getType().toString().equals("truefalse")) {
-//			System.out.println("Es ist ein truefalse.");
 
 			// Allgemeine Angaben pro Frage
 			subTask.setTrash(false);
@@ -34,7 +39,7 @@ public class TruefalseToMcConverter {
 			subTask.setCategory("singleSelect");
 
 			// Spezielle Angaben pro Frage
-			subTask.setProblem(question.getQuestiontext().getText().toString());
+			subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext()));
 			subTask.setHint(question.getName().getText().toString());
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);
@@ -56,7 +61,6 @@ public class TruefalseToMcConverter {
 			subTask.getCorrectOrIncorrect().add(incorrect);
 			correct = new McSubTaskDef.Correct();
 			incorrect = new McSubTaskDef.Incorrect();
-//		}
 
 		return subTask;
 	}
