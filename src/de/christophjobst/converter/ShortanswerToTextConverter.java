@@ -8,13 +8,22 @@
 
 package de.christophjobst.converter;
 
+import java.io.IOException;
+
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import org.xml.sax.SAXException;
+
+import de.christophjobst.main.Base64Relocator;
+
 import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.TextSubTaskDef;
 import generated.Quiz.Question;
 
 public class ShortanswerToTextConverter {
 
-	public static TextSubTaskDef processing(Question question) {
+	public static TextSubTaskDef processing(Question question) throws ParserConfigurationException, SAXException, IOException, TransformerException {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 
@@ -22,17 +31,11 @@ public class ShortanswerToTextConverter {
 
 				subTask = new TextSubTaskDef();
 
-				String problem = question.getName()
-						.getText();
 				subTask.setHint(question.getName().getText().toString());
 
-				String questionname = question
-						.getQuestiontext().getText();
 				String answer = question.getAnswer()
 						.get(0).getText();
 
-				subTask.setProblem(problem);
-				subTask.setId(questionname);
 				subTask.setCorrectionHint(answer);
 
 				// Allgemeine Angaben pro Frage
@@ -40,8 +43,7 @@ public class ShortanswerToTextConverter {
 				subTask.setInteractiveFeedback(false);
 
 				// Spezielle Angaben pro Frage
-				subTask.setProblem(question
-						.getQuestiontext().getText().toString());
+				subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext()));
 				subTask.setId(question.getName()
 						.getText().toString()
 						+ "_" + rand.getRandomID());
