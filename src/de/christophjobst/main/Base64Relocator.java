@@ -95,8 +95,10 @@ public class Base64Relocator {
 				text = buffer.toString();
 
 			} catch (org.xml.sax.SAXParseException e) {
-				System.out.println(problem_string + "catch block");
+				System.out.println(problem_string + "(catch block)");
+				text = problem_string;
 				e.printStackTrace();
+				System.out.println("++++Nutze unbearbeiteten Aufgabentsellungstext.++++");
 			}
 		} else {
 			 text = "Aufgabenstellung - Platzhalter";

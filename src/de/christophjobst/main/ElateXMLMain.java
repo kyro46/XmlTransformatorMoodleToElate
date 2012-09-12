@@ -34,7 +34,7 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	private static final String QUIZ_XML = "./unsere_fragen_aus_moodle.xml";
+	private static final String QUIZ_XML = "./roma2.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
@@ -74,6 +74,10 @@ public class ElateXMLMain {
 		
 		
 		//Nachbearbeitung wegen der Namespaces
+		//In package-info.java in taskmodel.thorstenberger.de
+		//wird ein Standardnamespace angegeben. 
+		//Dieser ist bei neu erstellten und eingefügten
+		//Elementen nicht als zusätzliches Attribut erwünscht.
 		StringWriter sw = new StringWriter();
         m_complexTaskDef.marshal(complexTaskDef, sw);
         String result = sw.toString();
@@ -91,30 +95,7 @@ public class ElateXMLMain {
 			} catch (Exception e) {
 			}
 		}
-		
-		
-
-
-		
+	
 	System.out.println("Done");
 	}	
-	
-	//http://www.dzone.com/snippets/java-read-file-string
-    private static String readFileAsString(String filePath)
-    throws java.io.IOException{
-        StringBuffer fileData = new StringBuffer(1000);
-        BufferedReader reader = new BufferedReader(
-                new FileReader(filePath));
-        char[] buf = new char[1024];
-        int numRead=0;
-        while((numRead=reader.read(buf)) != -1){
-            String readData = String.valueOf(buf, 0, numRead);
-            fileData.append(readData);
-            buf = new char[1024];
-        }
-        reader.close();
-        return fileData.toString();
-    }
-	
-	
 }
