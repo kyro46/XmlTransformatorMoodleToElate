@@ -19,7 +19,7 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.*;
 
 import generated.*;
 
-import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -34,7 +34,7 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	private static final String QUIZ_XML = "./roma2.xml";
+	private static final String QUIZ_XML = "./unsere_fragen_aus_moodle.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
@@ -70,8 +70,6 @@ public class ElateXMLMain {
 				Boolean.TRUE);
 		m_complexTaskDef.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
 		// m_complexTaskDef.marshal(complexTaskDef, System.out);
-
-		
 		
 		//Nachbearbeitung wegen der Namespaces
 		//In package-info.java in taskmodel.thorstenberger.de
@@ -81,9 +79,8 @@ public class ElateXMLMain {
 		StringWriter sw = new StringWriter();
         m_complexTaskDef.marshal(complexTaskDef, sw);
         String result = sw.toString();
-        //System.out.println(result);
+        System.out.println(result);
         result = result.replaceAll(" xmlns=\"\" xmlns:ns2=\"http://complex.taskmodel.thorstenberger.de/complexTaskDef\"", "");
-		
 		
 		Writer w = null;
 		try {
@@ -97,5 +94,48 @@ public class ElateXMLMain {
 		}
 	
 	System.out.println("Done");
+	}	
+	
+	public static byte[] startTransformToElateFormat(byte[] input_xml_content) throws JAXBException, IOException {
+
+		// JAXB Context für Moodle-Quiz
+		JAXBContext context_quiz = JAXBContext.newInstance(Quiz.class);
+		Unmarshaller um_quiz = context_quiz.createUnmarshaller();
+		Quiz quizsammlung = (Quiz) um_quiz.unmarshal(new ByteArrayInputStream(input_xml_content));
+
+		// JAXB Context und Marshaller für ComplexTaskDef
+		JAXBContext context_complexTaskDef = JAXBContext.newInstance(ComplexTaskDef.class);
+		Marshaller m_complexTaskDef = context_complexTaskDef.createMarshaller();
+
+		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
+		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
+
+		// Ausgabe des generierten XML
+		// System.out.println("Output from XML File: ");
+		m_complexTaskDef.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
+				Boolean.TRUE);
+		m_complexTaskDef.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+		// m_complexTaskDef.marshal(complexTaskDef, System.out);
+
+		//Nachbearbeitung wegen der Namespaces
+		//In package-info.java in taskmodel.thorstenberger.de
+		//wird ein Standardnamespace angegeben. 
+		//Dieser ist bei neu erstellten und eingefügten
+		//Elementen nicht als zusätzliches Attribut erwünscht.
+		StringWriter sw = new StringWriter();
+       m_complexTaskDef.marshal(complexTaskDef, sw);
+       String base = sw.toString();
+       //System.out.println(result);
+       base = base.replaceAll(" xmlns=\"\" xmlns:ns2=\"http://complex.taskmodel.thorstenberger.de/complexTaskDef\"", "");
+       
+       String anfang = base.substring(0, 71);
+       String ende = base.substring(72);
+       String namespace = " xmlns=\"http://complex.taskmodel.thorstenberger.de/complexTaskDef\"> ";
+       
+       String result = anfang + namespace + ende;
+
+       byte[] bytes = result.getBytes("UTF-8");
+       
+		return bytes;
 	}	
 }
