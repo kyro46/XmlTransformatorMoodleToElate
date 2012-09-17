@@ -13,9 +13,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import de.christophjobst.addonQuestionGetter.CompareTextTask;
-import de.christophjobst.addonQuestionGetter.GroupingTask;
-import de.christophjobst.addonQuestionGetter.TimeTask;
+import de.christophjobst.addonQuestionGetter.AddonTask;
 import de.christophjobst.converter.CategoryToCategoryConverter;
 import de.christophjobst.converter.ClozeToClozeConverter;
 import de.christophjobst.converter.EssayToTextConverter;
@@ -104,8 +102,7 @@ public class Inputaufteiler {
 		for (int j = 0; j < quizsammlung.getQuestion().toArray().length; j++) {
 			try {
 
-				if (quizsammlung.getQuestion().get(j).getType().toString()
-						.equals("category")) {
+				if (quizsammlung.getQuestion().get(j).getType().equals("category")) {
 
 					/*
 					 * Abgleich: Ist zu welchem Objekt im categoryManager gehört
@@ -126,11 +123,12 @@ public class Inputaufteiler {
 					 * TaskBlock-Erstellungsschleife Die nachsten Elemente bis
 					 * zur nachten Category konvertieren und hinzufügen.
 					 */
+					String questionType = "";
 					for (int i = j + 1; i < quizsammlung.getQuestion()
 							.toArray().length; i++) {
 
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("essay")) {
+						questionType = quizsammlung.getQuestion().get(i).getType();
+						if (questionType.equals("essay")) {
 
 							categoryManagerList
 									.get(belongingCategoryIndex)
@@ -152,8 +150,7 @@ public class Inputaufteiler {
 							// .toArray().length + " textfragen");
 						}
 
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("cloze")) {
+						if (questionType.equals("cloze")) {
 							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getClozeTaskBlock()
@@ -165,8 +162,7 @@ public class Inputaufteiler {
 									.setHasClozeTaskBlock(true);
 						}
 
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("truefalse")) {
+						if (questionType.equals("truefalse")) {
 							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getMcTaskBlock()
@@ -178,8 +174,7 @@ public class Inputaufteiler {
 									.setHasMcTaskBlock(true);
 						}
 
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("multichoice")) {
+						if (questionType.equals("multichoice")) {
 							categoryManagerList
 									.get(belongingCategoryIndex)
 									.getMcTaskBlock()
@@ -192,8 +187,7 @@ public class Inputaufteiler {
 
 						}
 
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("shortanswer")) {
+						if (questionType.equals("shortanswer")) {
 
 							categoryManagerList
 									.get(belongingCategoryIndex)
@@ -207,8 +201,7 @@ public class Inputaufteiler {
 
 						}
 
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("matching")) {
+						if (questionType.equals("matching")) {
 
 							categoryManagerList
 									.get(belongingCategoryIndex)
@@ -222,50 +215,26 @@ public class Inputaufteiler {
 						}
 						
 						
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("groupingtask")) {
+						if (!questionType.equals("category") &&
+								!questionType.equals("matching") &&
+								!questionType.equals("shortanswer") &&
+								!questionType.equals("multichoice") &&
+								!questionType.equals("truefalse") &&
+								!questionType.equals("cloze") &&
+								!questionType.equals("essay")) {
 
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getAddonTaskBlock()
-									.getAddonSubTaskDefOrChoice()
-									.add(GroupingTask
-											.processing(quizsammlung
-													.getQuestion().get(i)));
-							categoryManagerList.get(belongingCategoryIndex)
-									.setHasAddonTaskBlock(true);
-						}					
-						
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("comparetexttask")) {
+								categoryManagerList
+										.get(belongingCategoryIndex)
+										.getAddonTaskBlock()
+										.getAddonSubTaskDefOrChoice()
+										.add(AddonTask
+												.processing(quizsammlung
+														.getQuestion().get(i)));
+								categoryManagerList.get(belongingCategoryIndex)
+										.setHasAddonTaskBlock(true);
+}
 
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getAddonTaskBlock()
-									.getAddonSubTaskDefOrChoice()
-									.add(CompareTextTask
-											.processing(quizsammlung
-													.getQuestion().get(i)));
-							categoryManagerList.get(belongingCategoryIndex)
-									.setHasAddonTaskBlock(true);
-						}			
-						
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("timetask")) {
-
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getAddonTaskBlock()
-									.getAddonSubTaskDefOrChoice()
-									.add(TimeTask
-											.processing(quizsammlung
-													.getQuestion().get(i)));
-							categoryManagerList.get(belongingCategoryIndex)
-									.setHasAddonTaskBlock(true);
-						}			
-						
-						if (quizsammlung.getQuestion().get(i).getType()
-								.toString().equals("category")) {
+						if (questionType.equals("category")) {
 							/*
 							 * Wird ein Category gefunden, dann verlasse die
 							 * TaskBlock-Erstellungsschleife und suche dir die
