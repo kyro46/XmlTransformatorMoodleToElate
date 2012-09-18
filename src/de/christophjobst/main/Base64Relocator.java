@@ -99,9 +99,9 @@ public class Base64Relocator {
 
 			} catch (org.xml.sax.SAXParseException e) {
 				System.out.println(problem_string + "(catch block)");
-				e.printStackTrace();
 				System.out.println("****Versuche manuellen Parser für Aufgabentsellungstext.****");
-				
+				e.printStackTrace();
+
 				int start = 0;
 				int ende = 0;
 				String fileName = "";

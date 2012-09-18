@@ -75,7 +75,7 @@ public class Inputaufteiler {
 //		
 //		correctOnlyProcessedTasks.setNumberOfTasks(10);
 //		correctionMode.setCorrectOnlyProcessedTasks(correctOnlyProcessedTasks);
-//		config.setCorrectionMode(correctionMode);
+		config.setCorrectionMode(correctionMode);
 
 		//############Ende Einlagerungsdaten
 
@@ -168,7 +168,8 @@ public class Inputaufteiler {
 							
 							categoryManagerList.get(belongingCategoryIndex).setTextTaskBlock(EssayToTextConverter
 											.processing(quizsammlung
-													.getQuestion().get(i)));
+													.getQuestion().get(i)),quizsammlung
+													.getQuestion().get(i).getDefaultgrade());
 
 //							categoryManagerList
 //									.get(belongingCategoryIndex)
@@ -194,7 +195,7 @@ public class Inputaufteiler {
 							
 							categoryManagerList.get(belongingCategoryIndex).setClozeTaskBlock(ClozeToClozeConverter
 									.processing(quizsammlung
-											.getQuestion().get(i)));
+											.getQuestion().get(i)),"11");
 							
 //							categoryManagerList
 //									.get(belongingCategoryIndex)
@@ -211,7 +212,8 @@ public class Inputaufteiler {
 							
 							categoryManagerList.get(belongingCategoryIndex).setMcTaskBlock(TruefalseToMcConverter
 									.processing(quizsammlung
-											.getQuestion().get(i)));
+											.getQuestion().get(i)),quizsammlung
+											.getQuestion().get(i).getDefaultgrade());
 							
 //							categoryManagerList
 //									.get(belongingCategoryIndex)
@@ -228,7 +230,8 @@ public class Inputaufteiler {
 							
 							categoryManagerList.get(belongingCategoryIndex).setMcTaskBlock(MultichoiceToMcConverter
 									.processing(quizsammlung
-											.getQuestion().get(i)));
+											.getQuestion().get(i)),quizsammlung
+											.getQuestion().get(i).getDefaultgrade());
 							
 //							categoryManagerList
 //									.get(belongingCategoryIndex)
@@ -246,7 +249,8 @@ public class Inputaufteiler {
 							
 							categoryManagerList.get(belongingCategoryIndex).setTextTaskBlock(ShortanswerToTextConverter
 									.processing(quizsammlung
-											.getQuestion().get(i)));
+											.getQuestion().get(i)),quizsammlung
+											.getQuestion().get(i).getDefaultgrade());
 							
 //							categoryManagerList
 //									.get(belongingCategoryIndex)
@@ -264,7 +268,8 @@ public class Inputaufteiler {
 							
 							categoryManagerList.get(belongingCategoryIndex).setMappingTaskBlock(MatchingToMappingConverter
 									.processing(quizsammlung
-											.getQuestion().get(i)));
+											.getQuestion().get(i)),quizsammlung
+											.getQuestion().get(i).getDefaultgrade());
 							
 //							categoryManagerList
 //									.get(belongingCategoryIndex)
@@ -288,7 +293,8 @@ public class Inputaufteiler {
 
 							categoryManagerList.get(belongingCategoryIndex).setAddonTaskBlock(AddonTask
 									.processing(quizsammlung
-											.getQuestion().get(i)));
+											.getQuestion().get(i)),quizsammlung
+											.getQuestion().get(i).getDefaultgrade());
 							
 							
 //								categoryManagerList

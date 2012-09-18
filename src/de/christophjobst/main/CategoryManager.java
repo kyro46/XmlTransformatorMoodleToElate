@@ -152,16 +152,15 @@ public class CategoryManager {
 		return mappingTaskBlock;
 	}
 
-	public void setMappingTaskBlock(MappingSubTaskDef mappingSubTaskDef) {
+	public void setMappingTaskBlock(MappingSubTaskDef mappingSubTaskDef,String defaultgrade) {
 		
 		this.mappingTaskBlock = new MappingTaskBlock();
 		Config generalTaskBlockConfig = new Config();
 		generalTaskBlockConfig.setNoOfSelectedTasks(1);
 		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
 		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
-		generalTaskBlockConfig.setPointsPerTask(5);
+		generalTaskBlockConfig.setPointsPerTask(Float.parseFloat(defaultgrade));
 		generalTaskBlockConfig.setPreserveOrder(false);
-		
 		this.mappingTaskBlock.setConfig(generalTaskBlockConfig);
 		MappingConfig mappingConfig = new MappingConfig();
 		mappingConfig.setNegativePoints(0);
@@ -192,13 +191,13 @@ public class CategoryManager {
 		return mcTaskBlock;
 	}
 
-	public void setMcTaskBlock(McSubTaskDef mcSubTaskDef) {
+	public void setMcTaskBlock(McSubTaskDef mcSubTaskDef,String defaultgrade) {
 		mcTaskBlock = new McTaskBlock();
 		Config generalTaskBlockConfig = new Config();
 		generalTaskBlockConfig.setNoOfSelectedTasks(1);
 		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
 		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
-		generalTaskBlockConfig.setPointsPerTask(5);
+		generalTaskBlockConfig.setPointsPerTask(Float.parseFloat(defaultgrade));
 		generalTaskBlockConfig.setPreserveOrder(false);
 		
 		mcTaskBlock.setConfig(generalTaskBlockConfig);
@@ -228,7 +227,7 @@ public class CategoryManager {
 		return textTaskBlock;
 	}
 
-	public void setTextTaskBlock(TextSubTaskDef textSubTaskDef) {
+	public void setTextTaskBlock(TextSubTaskDef textSubTaskDef,String defaultgrade) {
 		
 		System.out.println("category manager settexttaskblock");
 		
@@ -237,7 +236,7 @@ public class CategoryManager {
 		generalTaskBlockConfig.setNoOfSelectedTasks(1);
 		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
 		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
-		generalTaskBlockConfig.setPointsPerTask(5);
+		generalTaskBlockConfig.setPointsPerTask(Float.parseFloat(defaultgrade));
 		generalTaskBlockConfig.setPreserveOrder(false);
 		
 		textTaskBlock.setConfig(generalTaskBlockConfig);
@@ -265,13 +264,13 @@ public class CategoryManager {
 		return clozeTaskBlock;
 	}
 
-	public void setClozeTaskBlock(ClozeSubTaskDef clozeSubTaskDef) {
+	public void setClozeTaskBlock(ClozeSubTaskDef clozeSubTaskDef,String defaultgrade) {
 		clozeTaskBlock = new ClozeTaskBlock();
 		Config generalTaskBlockConfig = new Config();
 		generalTaskBlockConfig.setNoOfSelectedTasks(1);
 		// TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
 		// Frageinstanzen nicht einheitlich viele Lücken/Matchings
-		generalTaskBlockConfig.setPointsPerTask(5);
+		generalTaskBlockConfig.setPointsPerTask(Float.parseFloat(defaultgrade));
 		generalTaskBlockConfig.setPreserveOrder(false);
 		
 		// Vorbereitung ClozeTaskBlock
@@ -309,14 +308,14 @@ public class CategoryManager {
 		return addonTaskBlock;
 	}
 	
-	public void setAddonTaskBlock(AddonSubTaskDef addonSubTaskDef){
+	public void setAddonTaskBlock(AddonSubTaskDef addonSubTaskDef,String defaultgrade){
 		addonTaskBlock = new AddonTaskBlock();
 		Config generalTaskBlockConfig = new Config();
 		generalTaskBlockConfig.setNoOfSelectedTasks(1);
 		/* TODO Punkte = Anzahl der Lücken/Matchings - inkonsistent, da in
 		 * Frageinstanzen nicht einheitlich viele Lücken/Matchings
 		 */
-		generalTaskBlockConfig.setPointsPerTask(5);
+		generalTaskBlockConfig.setPointsPerTask(Float.parseFloat(defaultgrade));
 		generalTaskBlockConfig.setPreserveOrder(false);
 		
 		addonTaskBlock.setConfig(generalTaskBlockConfig);
@@ -336,15 +335,10 @@ public class CategoryManager {
 
 		}
 		if (hasTextTaskBlock) {
-			
-			System.out.println("zuweisung");
-			
+						
 			for (int i = 0; i < textTaskBlockList.toArray().length; i ++){
-				System.out.println(i);
-
 				category.getMcTaskBlockOrClozeTaskBlockOrTextTaskBlock().add(
 						textTaskBlockList.get(i));
-				System.out.println(textTaskBlockList.get(i).getConfig().getPointsPerTask());
 			}
 		}
 		if (hasMappingTaskBlock) {
