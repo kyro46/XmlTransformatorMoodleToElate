@@ -1,0 +1,11 @@
+*.class
+*.xml
+*.xsd
+*.jpg
+*.png
+*.fred
+
+# Package Files #
+*.jar
+*.war
+*.ear

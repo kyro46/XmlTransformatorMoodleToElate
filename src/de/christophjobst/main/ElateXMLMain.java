@@ -79,7 +79,7 @@ public class ElateXMLMain {
 		StringWriter sw = new StringWriter();
         m_complexTaskDef.marshal(complexTaskDef, sw);
         String result = sw.toString();
-        System.out.println(result);
+//        System.out.println(result);
         result = result.replaceAll(" xmlns=\"\" xmlns:ns2=\"http://complex.taskmodel.thorstenberger.de/complexTaskDef\"", "");
 		
 		Writer w = null;

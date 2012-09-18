@@ -22,6 +22,8 @@ import de.christophjobst.converter.MultichoiceToMcConverter;
 import de.christophjobst.converter.ShortanswerToTextConverter;
 import de.christophjobst.converter.TruefalseToMcConverter;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.CorrectOnlyProcessedTasks;
+import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.MultipleCorrectors;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.Regular;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode;
 import generated.*;
@@ -37,31 +39,52 @@ public class Inputaufteiler {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
 		Date date = new Date();
-
+		boolean hasAExamConfigTask = false;
+		
 		// Klausurdatei aufsetzen - Allgemeine Angaben
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
 		CorrectionMode correctionMode = new CorrectionMode();
 		Regular regular = new Regular();
+		MultipleCorrectors multipleCorrectors = new MultipleCorrectors();
+		CorrectOnlyProcessedTasks correctOnlyProcessedTasks = new CorrectOnlyProcessedTasks();
 		ComplexTaskDef.Config config = new ComplexTaskDef.Config();
 		ComplexTaskDef.Revisions.Revision revision = new ComplexTaskDef.Revisions.Revision();
 		ComplexTaskDef.Revisions revisions = new ComplexTaskDef.Revisions();
+		
+		
+		//################################################
+		//TODO in KonfigTaskType-Knoten einlagern
+		complexTaskDef.setTitle("Testklausur - 5min, 2m extensiontime");
+		
+		config.setTime(5);
+		config.setKindnessExtensionTime(2);
+		config.setTasksPerPage(1);
+		config.setTries(5);
+		complexTaskDef.setConfig(config);
+		complexTaskDef.setID(rand.getRandomID());
+
+		
+		complexTaskDef.setShowHandlingHintsBeforeStart(false);
+		complexTaskDef.setStartText("Starttext.");
+		complexTaskDef.setDescription("Eine Testklausur");
 
 		correctionMode.setRegular(regular);
-		config.setKindnessExtensionTime(2);
-		config.setCorrectionMode(correctionMode);
-		config.setTries(5);
-		config.setTasksPerPage(30);
-		complexTaskDef.setConfig(config);
-		complexTaskDef.setDescription("Eine Testklausur");
-		complexTaskDef.setID(rand.getRandomID());
-		complexTaskDef.setShowHandlingHintsBeforeStart(false);
+		
+//		multipleCorrectors.setNumberOfCorrectors(2);
+//		correctionMode.setMultipleCorrectors(multipleCorrectors);
+//		
+//		correctOnlyProcessedTasks.setNumberOfTasks(10);
+//		correctionMode.setCorrectOnlyProcessedTasks(correctOnlyProcessedTasks);
+//		config.setCorrectionMode(correctionMode);
 
-		revisions.getRevision().add(revision);
+		//############Ende Einlagerungsdaten
+
 		revision.setAuthor("Christoph Jobst");
 		revision.setDate(date.getTime());
 		revision.setSerialNumber(1);
+		revisions.getRevision().add(revision);
 		complexTaskDef.setRevisions(revisions);
-		complexTaskDef.setTitle("Testklausur");
+
 
 		/*
 		 * Zuweisungs und Konvertierungsschleife für Category-Blöcke
@@ -124,19 +147,36 @@ public class Inputaufteiler {
 					 * zur nachten Category konvertieren und hinzufügen.
 					 */
 					String questionType = "";
+
 					for (int i = j + 1; i < quizsammlung.getQuestion()
 							.toArray().length; i++) {
 
 						questionType = quizsammlung.getQuestion().get(i).getType();
-						if (questionType.equals("essay")) {
+						
+						if (questionType.equals("examConfigTask")) {
+							if (hasAExamConfigTask == false){
+							
+								//TODO examConfig in die CompelexTaskDef schreiben
 
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getTextTaskBlock()
-									.getTextSubTaskDefOrChoice()
-									.add(EssayToTextConverter
+								hasAExamConfigTask = true;
+							} else {
+								System.err.println("Zu viele Klausurkonfigurationen vorhanden. Es wird die zuerst gefundene genutzt.");
+							}
+						}
+		
+						if (questionType.equals("essay")) {
+							
+							categoryManagerList.get(belongingCategoryIndex).setTextTaskBlock(EssayToTextConverter
 											.processing(quizsammlung
 													.getQuestion().get(i)));
+
+//							categoryManagerList
+//									.get(belongingCategoryIndex)
+//									.getTextTaskBlock()
+//									.getTextSubTaskDefOrChoice()
+//									.add(EssayToTextConverter
+//											.processing(quizsammlung
+//													.getQuestion().get(i)));
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasTextTaskBlock(true);
 							// Debug:
@@ -151,65 +191,88 @@ public class Inputaufteiler {
 						}
 
 						if (questionType.equals("cloze")) {
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getClozeTaskBlock()
-									.getClozeSubTaskDefOrChoice()
-									.add(ClozeToClozeConverter
-											.processing(quizsammlung
-													.getQuestion().get(i)));
+							
+							categoryManagerList.get(belongingCategoryIndex).setClozeTaskBlock(ClozeToClozeConverter
+									.processing(quizsammlung
+											.getQuestion().get(i)));
+							
+//							categoryManagerList
+//									.get(belongingCategoryIndex)
+//									.getClozeTaskBlock()
+//									.getClozeSubTaskDefOrChoice()
+//									.add(ClozeToClozeConverter
+//											.processing(quizsammlung
+//													.getQuestion().get(i)));
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasClozeTaskBlock(true);
 						}
 
 						if (questionType.equals("truefalse")) {
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getMcTaskBlock()
-									.getMcSubTaskDefOrChoice()
-									.add(TruefalseToMcConverter
-											.processing(quizsammlung
-													.getQuestion().get(i)));
+							
+							categoryManagerList.get(belongingCategoryIndex).setMcTaskBlock(TruefalseToMcConverter
+									.processing(quizsammlung
+											.getQuestion().get(i)));
+							
+//							categoryManagerList
+//									.get(belongingCategoryIndex)
+//									.getMcTaskBlock()
+//									.getMcSubTaskDefOrChoice()
+//									.add(TruefalseToMcConverter
+//											.processing(quizsammlung
+//													.getQuestion().get(i)));
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasMcTaskBlock(true);
 						}
 
 						if (questionType.equals("multichoice")) {
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getMcTaskBlock()
-									.getMcSubTaskDefOrChoice()
-									.add(MultichoiceToMcConverter
-											.processing(quizsammlung
-													.getQuestion().get(i)));
+							
+							categoryManagerList.get(belongingCategoryIndex).setMcTaskBlock(MultichoiceToMcConverter
+									.processing(quizsammlung
+											.getQuestion().get(i)));
+							
+//							categoryManagerList
+//									.get(belongingCategoryIndex)
+//									.getMcTaskBlock()
+//									.getMcSubTaskDefOrChoice()
+//									.add(MultichoiceToMcConverter
+//											.processing(quizsammlung
+//													.getQuestion().get(i)));
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasMcTaskBlock(true);
 
 						}
 
 						if (questionType.equals("shortanswer")) {
-
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getTextTaskBlock()
-									.getTextSubTaskDefOrChoice()
-									.add(ShortanswerToTextConverter
-											.processing(quizsammlung
-													.getQuestion().get(i)));
+							
+							categoryManagerList.get(belongingCategoryIndex).setTextTaskBlock(ShortanswerToTextConverter
+									.processing(quizsammlung
+											.getQuestion().get(i)));
+							
+//							categoryManagerList
+//									.get(belongingCategoryIndex)
+//									.getTextTaskBlock()
+//									.getTextSubTaskDefOrChoice()
+//									.add(ShortanswerToTextConverter
+//											.processing(quizsammlung
+//													.getQuestion().get(i)));
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasTextTaskBlock(true);
 
 						}
 
 						if (questionType.equals("matching")) {
-
-							categoryManagerList
-									.get(belongingCategoryIndex)
-									.getMappingTaskBlock()
-									.getMappingSubTaskDefOrChoice()
-									.add(MatchingToMappingConverter
-											.processing(quizsammlung
-													.getQuestion().get(i)));
+							
+							categoryManagerList.get(belongingCategoryIndex).setMappingTaskBlock(MatchingToMappingConverter
+									.processing(quizsammlung
+											.getQuestion().get(i)));
+							
+//							categoryManagerList
+//									.get(belongingCategoryIndex)
+//									.getMappingTaskBlock()
+//									.getMappingSubTaskDefOrChoice()
+//									.add(MatchingToMappingConverter
+//											.processing(quizsammlung
+//													.getQuestion().get(i)));
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasMappingTaskBlock(true);
 						}
@@ -223,13 +286,18 @@ public class Inputaufteiler {
 								!questionType.equals("cloze") &&
 								!questionType.equals("essay")) {
 
-								categoryManagerList
-										.get(belongingCategoryIndex)
-										.getAddonTaskBlock()
-										.getAddonSubTaskDefOrChoice()
-										.add(AddonTask
-												.processing(quizsammlung
-														.getQuestion().get(i)));
+							categoryManagerList.get(belongingCategoryIndex).setAddonTaskBlock(AddonTask
+									.processing(quizsammlung
+											.getQuestion().get(i)));
+							
+							
+//								categoryManagerList
+//										.get(belongingCategoryIndex)
+//										.getAddonTaskBlock()
+//										.getAddonSubTaskDefOrChoice()
+//										.add(AddonTask
+//												.processing(quizsammlung
+//														.getQuestion().get(i)));
 								categoryManagerList.get(belongingCategoryIndex)
 										.setHasAddonTaskBlock(true);
 }
