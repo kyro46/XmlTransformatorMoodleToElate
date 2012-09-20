@@ -54,7 +54,7 @@ public class Inputaufteiler {
 		
 		//################################################
 		//TODO in KonfigTaskType-Knoten einlagern
-		complexTaskDef.setTitle("Testklausur - 5min, 2m extensiontime");
+		complexTaskDef.setTitle("Datenfeld - TODO Klausurdeftyp Moodle - Title");
 		
 		config.setTime(5);
 		config.setKindnessExtensionTime(2);
@@ -65,8 +65,8 @@ public class Inputaufteiler {
 
 		
 		complexTaskDef.setShowHandlingHintsBeforeStart(false);
-		complexTaskDef.setStartText("Starttext.");
-		complexTaskDef.setDescription("Eine Testklausur");
+		complexTaskDef.setStartText("Datenfeld - TODO Klausurdeftyp Moodle - StartText");
+		complexTaskDef.setDescription("Datenfeld - TODO Klausurdeftyp Moodle - Description");
 
 		correctionMode.setRegular(regular);
 		
@@ -78,8 +78,8 @@ public class Inputaufteiler {
 		config.setCorrectionMode(correctionMode);
 
 		//############Ende Einlagerungsdaten
-
-		revision.setAuthor("Christoph Jobst");
+		//TODO woher den Autor nehmen?
+		revision.setAuthor("Datenfeld - ??TODO?? KEINE ENTSPRECHUNG IN MOODLE - Author");
 		revision.setDate(date.getTime());
 		revision.setSerialNumber(1);
 		revisions.getRevision().add(revision);
@@ -313,9 +313,7 @@ public class Inputaufteiler {
 							 * Wird ein Category gefunden, dann verlasse die
 							 * TaskBlock-Erstellungsschleife und suche dir die
 							 * neue zu füllende Category aus dem CategoryManager
-							 * 
-							 * TODO Das ruft nach Rekursion:
-							 * 
+							 *
 							 * Wenn es eine Category ist und zu einer
 							 * Unterkategorie gehört verfahre wie bisher mit den
 							 * TaskBlöcken -> füge der aktuellen Category eine
