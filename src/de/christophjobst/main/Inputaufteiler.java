@@ -51,35 +51,8 @@ public class Inputaufteiler {
 		ComplexTaskDef.Revisions.Revision revision = new ComplexTaskDef.Revisions.Revision();
 		ComplexTaskDef.Revisions revisions = new ComplexTaskDef.Revisions();
 		
-		
-		//################################################
-		//TODO in KonfigTaskType-Knoten einlagern
-		complexTaskDef.setTitle("Datenfeld - TODO Klausurdeftyp Moodle - Title");
-		
-		config.setTime(5);
-		config.setKindnessExtensionTime(2);
-		config.setTasksPerPage(1);
-		config.setTries(5);
-		complexTaskDef.setConfig(config);
-		complexTaskDef.setID(rand.getRandomID());
-
-		
-		complexTaskDef.setShowHandlingHintsBeforeStart(false);
-		complexTaskDef.setStartText("Datenfeld - TODO Klausurdeftyp Moodle - StartText");
-		complexTaskDef.setDescription("Datenfeld - TODO Klausurdeftyp Moodle - Description");
-
-		correctionMode.setRegular(regular);
-		
-//		multipleCorrectors.setNumberOfCorrectors(2);
-//		correctionMode.setMultipleCorrectors(multipleCorrectors);
-//		
-//		correctOnlyProcessedTasks.setNumberOfTasks(10);
-//		correctionMode.setCorrectOnlyProcessedTasks(correctOnlyProcessedTasks);
-		config.setCorrectionMode(correctionMode);
-
-		//############Ende Einlagerungsdaten
-		//TODO woher den Autor nehmen?
-		revision.setAuthor("Datenfeld - ??TODO?? KEINE ENTSPRECHUNG IN MOODLE - Author");
+		//TODO METATAG der exportieren Moodleklausur nach "Autor" oder Author druchsuchen
+		revision.setAuthor("Christoph Jobst");
 		revision.setDate(date.getTime());
 		revision.setSerialNumber(1);
 		revisions.getRevision().add(revision);
@@ -153,10 +126,43 @@ public class Inputaufteiler {
 
 						questionType = quizsammlung.getQuestion().get(i).getType();
 						
-						if (questionType.equals("examConfigTask")) {
+						if (questionType.equals("meta")) {
 							if (hasAExamConfigTask == false){
 							
-								//TODO examConfig in die CompelexTaskDef schreiben
+								
+								//################################################
+								//TODO in KonfigTaskType-Knoten einlagern
+								complexTaskDef.setTitle(quizsammlung.getQuestion().get(i).getName().getText());
+								
+								config.setTime(Integer.parseInt(quizsammlung.getQuestion().get(i).getTime()));
+								config.setKindnessExtensionTime(Integer.parseInt(quizsammlung.getQuestion().get(i).getKindnessextensiontime()));
+								config.setTasksPerPage(Integer.parseInt(quizsammlung.getQuestion().get(i).getTasksperpage()));
+								config.setTries(Integer.parseInt(quizsammlung.getQuestion().get(i).getTries()));
+								complexTaskDef.setConfig(config);
+								complexTaskDef.setID(rand.getRandomID());
+
+								
+								complexTaskDef.setShowHandlingHintsBeforeStart(quizsammlung.getQuestion().get(i).getShowhandlinghintsbeforestart().equals("1") ? true : false);
+								complexTaskDef.setStartText(quizsammlung.getQuestion().get(i).getGeneralfeedback().getText());
+								complexTaskDef.setDescription(quizsammlung.getQuestion().get(i).getQuestiontext().getText());
+
+								
+								
+								int numberOfCorrectors = Integer.parseInt(quizsammlung.getQuestion().get(i).getNumberofcorrectors());
+								
+								if (numberOfCorrectors == 1) {
+									correctionMode.setRegular(regular);
+								} else {
+									multipleCorrectors.setNumberOfCorrectors(numberOfCorrectors);
+									correctionMode.setMultipleCorrectors(multipleCorrectors);
+								}
+
+								//Wird z.Z. nicht angeboten
+//								correctOnlyProcessedTasks.setNumberOfTasks(10);
+//								correctionMode.setCorrectOnlyProcessedTasks(correctOnlyProcessedTasks);
+//								config.setCorrectionMode(correctionMode);
+
+								//############Ende Einlagerungsdaten						
 
 								hasAExamConfigTask = true;
 							} else {
@@ -284,6 +290,7 @@ public class Inputaufteiler {
 						
 						
 						if (!questionType.equals("category") &&
+								!questionType.equals("meta") &&
 								!questionType.equals("matching") &&
 								!questionType.equals("shortanswer") &&
 								!questionType.equals("multichoice") &&
@@ -337,6 +344,37 @@ public class Inputaufteiler {
 			}
 		}
 
+		
+		//Kein meta-Element zur Klausurdefinition? Defaultvorgaben:
+		//Defaultvorgaben
+		if (hasAExamConfigTask == false) {
+			complexTaskDef.setTitle("Testklausur ohne Klausurkonfiguration");
+			
+			config.setTime(5);
+			config.setKindnessExtensionTime(2);
+			config.setTasksPerPage(3);
+			config.setTries(5);
+			complexTaskDef.setConfig(config);
+			complexTaskDef.setID(rand.getRandomID());
+
+			
+			complexTaskDef.setShowHandlingHintsBeforeStart(true);
+			complexTaskDef.setStartText("Starttext - Keine Klausurkonfiguration angegeben");
+			complexTaskDef.setDescription("Beschreibung - Keine Klausurkonfiguration angegeben");
+
+			correctionMode.setRegular(regular);
+
+//			multipleCorrectors.setNumberOfCorrectors(2);
+//			correctionMode.setMultipleCorrectors(multipleCorrectors);
+
+		}
+
+		//Ende Defaultvorgaben
+		
+		
+		
+		
+		
 		// Alle Category in der Liste hinzufügen
 		// Hier Auswahl, ob flach oder geschachtelt
 		complexTaskDef = CategoryAssignment.assignFlatCategories(
