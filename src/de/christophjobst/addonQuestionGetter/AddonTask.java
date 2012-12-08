@@ -28,46 +28,44 @@ import de.christophjobst.main.RandomIdentifierGenerator;
 import de.thorstenberger.taskmodel.complex.complextaskdef.AddonSubTaskDef;
 
 public class AddonTask {
-	
+
 	public static AddonSubTaskDef processing(Question question)
-			throws ParserConfigurationException, SAXException, IOException, TransformerException {
+			throws ParserConfigurationException, SAXException, IOException,
+			TransformerException {
 
 		RandomIdentifierGenerator rand = new RandomIdentifierGenerator();
-
+		String memento_string = "";
 		AddonSubTaskDef subTask = new AddonSubTaskDef();
 
 		// Allgemeine Angaben pro Frage
 		subTask.setTrash(false);
 		subTask.setInteractiveFeedback(false);
-		subTask.setCorrectionHint(question.getCorrectorfeedback());
+		subTask.setCorrectionHint(Base64Relocator.relocateBase64(question
+				.getCorrectorfeedback().getText(), question
+				.getCorrectorfeedback().getFile()));
 		subTask.setHint(question.getName().getText().toString());
 
 		// Spezielle Angaben pro Frage
 		subTask.setId(question.getName().getText().toString() + "_"
 				+ rand.getRandomID());
-		subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext().getText(),question.getQuestiontext().getFile()));		
+		subTask.setProblem(Base64Relocator.relocateBase64(question
+				.getQuestiontext().getText(), question.getQuestiontext()
+				.getFile()));
 
-
-		
-		
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
-		
-		String memento_string = question.getMemento();
-	
-		Document document  = builder.parse(new InputSource(new StringReader(memento_string)));
-				
-	     Element root = document.getDocumentElement();
 
-	     
-	     //TODO Cornelius in Moodle: 
-//	     timetask -> timeTask
-//	     comparetexttask -> compareText -> compareTextTask
-//	     groupingtask -> groupingTask
-	     subTask.setTaskType(question.getType());
-	     
-	     subTask.setMemento(root);
-		
+		memento_string = question.getMemento();
+
+		Document document = builder.parse(new InputSource(new StringReader(
+				memento_string)));
+
+		Element root = document.getDocumentElement();
+
+		subTask.setTaskType(question.getType());
+
+		subTask.setMemento(root);
+
 		return subTask;
 	}
 }
