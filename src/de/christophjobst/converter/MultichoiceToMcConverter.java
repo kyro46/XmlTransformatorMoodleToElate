@@ -64,7 +64,7 @@ public class MultichoiceToMcConverter {
 
 		}
 		
-		/* Sonderfall: Singlechoice-Aufgabe mit mehreren angezeigten korrekten L�sungen
+		/* Sonderfall: Singlechoice-Aufgabe mit mehreren angezeigten korrekten Lösungen
 		 * Kann so nicht abgebildet werden - daher Umwandlung zur multichoice-Aufgabe
 		 */
 		if (correctAnswerCount > 1) {
