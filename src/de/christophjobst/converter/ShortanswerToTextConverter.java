@@ -31,7 +31,7 @@ public class ShortanswerToTextConverter {
 
 				subTask = new TextSubTaskDef();
 
-				subTask.setHint(question.getName().getText().toString());
+				subTask.setHint(Base64Relocator.relocateBase64(question.getGeneralfeedback().getText(),question.getQuestiontext().getFile()));
 
 				String answer = question.getAnswer()
 						.get(0).getText();

@@ -42,7 +42,7 @@ public class MultichoiceToMcConverter {
 
 		// Spezielle Angaben pro Frage
 		subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext().getText(),question.getQuestiontext().getFile()));
-		subTask.setHint(question.getName().getText().toString());
+		subTask.setHint(Base64Relocator.relocateBase64(question.getGeneralfeedback().getText(),question.getQuestiontext().getFile()));
 		subTask.setId(question.getName().getText().toString() + "_"
 				+ rand.getRandomID());
 		int correctAnswerCount = 0;

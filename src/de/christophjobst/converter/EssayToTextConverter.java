@@ -29,9 +29,13 @@ public class EssayToTextConverter {
 		TextSubTaskDef subTask = new TextSubTaskDef();
 
 			subTask.setProblem(Base64Relocator.relocateBase64(question.getQuestiontext().getText(),question.getQuestiontext().getFile()));
-			subTask.setHint(question.getName().getText().toString());
+			subTask.setHint(Base64Relocator.relocateBase64(question.getGeneralfeedback().getText(),question.getQuestiontext().getFile()));
 
 			subTask.setCorrectionHint(Base64Relocator.relocateBase64(question.getGraderinfo().getText(),question.getGraderinfo().getFile()));
+			
+			subTask.setTextFieldHeight(Integer.parseInt(question.getResponsefieldlines()));
+			subTask.setTextFieldWidth(Integer.parseInt(question.getResponsefieldwidth()));
+			
 			
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);

@@ -37,7 +37,7 @@ public class MatchingToMappingConverter {
 			subTask.setTrash(false);
 			subTask.setInteractiveFeedback(false);
 			subTask.setCorrectionHint(" ");
-			subTask.setHint(question.getName().getText().toString());
+			subTask.setHint(Base64Relocator.relocateBase64(question.getGeneralfeedback().getText(),question.getQuestiontext().getFile()));
 
 			// Spezielle Angaben pro Frage
 			subTask.setId(question.getName().getText().toString() + "_"

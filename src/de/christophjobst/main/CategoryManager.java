@@ -107,22 +107,6 @@ public class CategoryManager {
 		this.title = title;
 	}
 
-	public MappingTaskBlock getMappingTaskBlock() {
-		mappingTaskBlock = new MappingTaskBlock();
-		Config generalTaskBlockConfig = new Config();
-		generalTaskBlockConfig.setNoOfSelectedTasks(1);
-		generalTaskBlockConfig.setPointsPerTask(5);
-		generalTaskBlockConfig.setPreserveOrder(false);
-		
-		mappingTaskBlock.setConfig(generalTaskBlockConfig);
-		MappingConfig mappingConfig = new MappingConfig();
-		//TODO NegativePoints aus Moodle beziehen
-		mappingConfig.setNegativePoints(1);
-		mappingTaskBlock.setMappingConfig(mappingConfig);
-		
-		return mappingTaskBlock;
-	}
-
 	public void setMappingTaskBlock(MappingSubTaskDef mappingSubTaskDef,String defaultgrade) {
 		
 		this.mappingTaskBlock = new MappingTaskBlock();
@@ -212,6 +196,7 @@ public class CategoryManager {
 		
 	}
 
+	//TODO Beibehaltung der Aufgabenreihenfolge pro Category  wird steht aus
 	public void generateCategory() {
 		if (hasClozeTaskBlock) {
 			for (int i = 0; i < clozeTaskBlockList.toArray().length; i ++){
