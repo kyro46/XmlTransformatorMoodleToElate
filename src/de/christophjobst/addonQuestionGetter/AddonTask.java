@@ -43,7 +43,9 @@ public class AddonTask {
 		subTask.setCorrectionHint(Base64Relocator.relocateBase64(question
 				.getCorrectorfeedback().getText(), question
 				.getCorrectorfeedback().getFile()));
-		subTask.setHint(Base64Relocator.relocateBase64(question.getGeneralfeedback().getText(),question.getQuestiontext().getFile()));
+		subTask.setHint(Base64Relocator.relocateBase64(question
+				.getGeneralfeedback().getText(), question.getQuestiontext()
+				.getFile()));
 
 		// Spezielle Angaben pro Frage
 		subTask.setId(question.getName().getText().toString() + "_"

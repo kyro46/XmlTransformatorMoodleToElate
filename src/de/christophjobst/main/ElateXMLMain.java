@@ -18,16 +18,12 @@ import de.thorstenberger.taskmodel.complex.complextaskdef.*;
 import generated.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.nio.MappedByteBuffer;
-import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
+
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -37,7 +33,7 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	private static final String QUIZ_XML = "./moodleFuture.xml";
+	private static final String QUIZ_XML = "./roma2.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
@@ -100,23 +96,6 @@ public class ElateXMLMain {
 	
 	System.out.println("Done");
 	}	
-	
-	private static String readFile(String path) throws IOException {
-		  FileInputStream stream = new FileInputStream(new File(path));
-		  try {
-		    FileChannel fc = stream.getChannel();
-		    MappedByteBuffer bb = fc.map(FileChannel.MapMode.READ_ONLY, 0, fc.size());
-		    /* Instead of using default, pass in a decoder. */
-		    return Charset.defaultCharset().decode(bb).toString();
-		  }
-		  finally {
-		    stream.close();
-		  }
-		}
-
-	
-	
-	
 	
 	public static byte[] startTransformToElateFormat(byte[] input_xml_content) throws JAXBException, IOException {
 
