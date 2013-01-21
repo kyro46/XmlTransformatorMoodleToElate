@@ -62,6 +62,15 @@ public class EssayToTextConverter {
 			subTask.setTextFieldWidth(60);
 		}
 
+		
+		try {
+			subTask.setInitialTextFieldValue(question.getInitialtextfieldvalue());
+		} catch (NullPointerException e) {
+			//Do nothing
+		}	
+		
+		
+		
 		subTask.setTrash(false);
 		subTask.setInteractiveFeedback(false);
 		subTask.setId(question.getName().getText().toString() + "_"

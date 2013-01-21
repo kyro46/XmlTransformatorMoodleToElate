@@ -273,18 +273,9 @@
 							<xs:element name="memento"
 								type="xs:string">
 							</xs:element>
-<<<<<<< HEAD
-							<xs:element name="shuffleanswers"
-								type="xs:boolean">
-=======
 							<xs:element name="responsefieldlines"
 								type="xs:string">
->>>>>>> branch 'master' of https://github.com/kyro46/XmlTransformatorMoodleToElate.git
 							</xs:element>
-<<<<<<< HEAD
-							<xs:element name="responsefieldlines"
-								type="xs:string">
-=======
 							<xs:element name="responsefieldwidth"
 								type="xs:string">
 							</xs:element>
@@ -305,29 +296,13 @@
 							</xs:element>
 							<xs:element name="shuffleanswers"
 								type="xs:boolean">
->>>>>>> branch 'master' of https://github.com/kyro46/XmlTransformatorMoodleToElate.git
-							</xs:element>
-							<xs:element name="responsefieldwidth"
-								type="xs:string">
-							</xs:element>
-
-							<xs:element name="num_right_min"
-								type="xs:int">
-							</xs:element>
-                            <xs:element name="num_shown" type="xs:int">
-							</xs:element>
-                            <xs:element name="num_right_max"
-								type="xs:int">
 							</xs:element>
 							<xs:element name="assessmentmode"
 								type="xs:int">
 							</xs:element>
-							<xs:element name="penalty_empty"
-								type="xs:double">
+							<xs:element name="initialtextfieldvalue"
+								type="xs:string">
 							</xs:element>
-							<xs:element name="penalty_wrong"
-								type="xs:double">
-							</xs:element>
 						</xs:sequence>
 						<xs:attribute name="type" use="required">
 							<xs:simpleType>
