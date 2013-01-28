@@ -33,7 +33,7 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	//Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	private static final String QUIZ_XML = "./shortanswer.xml";
+	private static final String QUIZ_XML = "./alltypes12.xml";
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
