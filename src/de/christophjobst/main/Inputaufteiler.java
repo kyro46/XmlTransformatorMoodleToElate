@@ -64,22 +64,55 @@ public class Inputaufteiler {
 		 */
 		List<String> categoryNameList = new ArrayList<String>();
 		List<CategoryManager> categoryManagerList = new ArrayList<CategoryManager>();
+		int startmarker = 9;
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
 			try {
+				
+				// Ist es ein Direktexport aus Moodle (fängt mit $course$ an) -> startmarke=9 oder aus dem
+				// Klausurplugin -> startmarke=0?
+				if (quizsammlung.getQuestion().get(i).getType().toString()
+						.equals("category")
+						&& quizsammlung.getQuestion().get(i).getCategory()
+								.getText().toString().startsWith("$course$")) {
+					System.out.println(quizsammlung.getQuestion().get(i)
+							.getCategory().getText().toString());
+					startmarker = 9;
+
+				} else {
+					startmarker = 0;
+				}			
+				
 				if (quizsammlung.getQuestion().get(i).getType().toString()
 						.equals("category")
 						&& (!categoryNameList.contains(quizsammlung
 								.getQuestion().get(i).getCategory().getText()
-								.toString().substring(9)))) {
+								.toString().substring(startmarker)))) {
 					categoryNameList.add(quizsammlung.getQuestion().get(i)
-							.getCategory().getText().toString().substring(9));
+							.getCategory().getText().toString().substring(startmarker));
+					
+					
+					String type;
+					String num_shown;
+					try {
+						type = quizsammlung.getQuestion().get(i)
+										.getCategory().getType();
+								num_shown = quizsammlung.getQuestion().get(i)
+										.getCategory().getNumShown();
+					} catch (Exception e) {
+						System.out.println("Keine Klausurpluginkonfig gefunden, nutze Standard");
+						type = "default";
+						num_shown = "-1";
+						
+					}
+					
 					categoryManagerList.add(new CategoryManager(
 							CategoryToCategoryConverter.processing(quizsammlung
-									.getQuestion().get(i))));
+									.getQuestion().get(i), startmarker), num_shown , type));
 				}
 
 			} catch (Exception e) {
 				System.out.println("Problem beim Category-Parser");
+				e.printStackTrace();
 			}
 
 		}
@@ -107,7 +140,7 @@ public class Inputaufteiler {
 								.getTitle()
 								.equals(quizsammlung.getQuestion().get(j)
 										.getCategory().getText().toString()
-										.substring(9))) {
+										.substring(startmarker))) {
 							belongingCategoryIndex = k;
 						}
 					}
