@@ -8,9 +8,6 @@
 
 package de.christophjobst.main;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Category.AddonTaskBlock;
 import de.thorstenberger.taskmodel.complex.complextaskdef.AddonSubTaskDef;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ClozeSubTaskDef;
@@ -246,8 +243,15 @@ public class CategoryManager {
 	}
 
 	public void setClozeTaskBlock(ClozeSubTaskDef clozeSubTaskDef,
-			float defaultgrade, Boolean casesensitivity) {
+			float defaultgrade, Boolean casesensitivity, float penalty) {
 
+		float negativePoints = penalty;
+		 System.out.println(negativePoints);
+		// if (negativePoints == 0) {
+		// negativePoints = 1.0f;
+		// }
+				
+		
 		// Einfach alles nehmen und mit versch. Bepunktung etc. eintragen.
 		if (num_shown.equals("-1")) {
 			clozeTaskBlock = new ClozeTaskBlock();
@@ -259,10 +263,9 @@ public class CategoryManager {
 			// Vorbereitung ClozeTaskBlock
 			clozeTaskBlock.setConfig(generalTaskBlockConfig);
 			ClozeConfig clozeConfig = new ClozeConfig();
-			// TODO IgnoreCase aus Moodle beziehen
 			clozeConfig.setIgnoreCase(casesensitivity);
 			// TODO NegativePoints aus Moodle beziehen
-			clozeConfig.setNegativePoints(1);
+			clozeConfig.setNegativePoints(negativePoints);
 			clozeTaskBlock.setClozeConfig(clozeConfig);
 
 			clozeTaskBlock.getClozeSubTaskDefOrChoice().add(clozeSubTaskDef);
@@ -282,10 +285,9 @@ public class CategoryManager {
 				// Vorbereitung ClozeTaskBlock
 				clozeTaskBlock.setConfig(generalTaskBlockConfig);
 				ClozeConfig clozeConfig = new ClozeConfig();
-				// TODO IgnoreCase aus Moodle beziehen
 				clozeConfig.setIgnoreCase(true);
 				// TODO NegativePoints aus Moodle beziehen
-				clozeConfig.setNegativePoints(1);
+				clozeConfig.setNegativePoints(negativePoints);
 				clozeTaskBlock.setClozeConfig(clozeConfig);
 
 				this.clozeTaskBlock.getClozeSubTaskDefOrChoice().add(

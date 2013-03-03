@@ -23,10 +23,6 @@ import de.christophjobst.converter.MultichoiceToMcConverter;
 import de.christophjobst.converter.ShortanswerToTextConverter;
 import de.christophjobst.converter.TruefalseToMcConverter;
 import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.CorrectOnlyProcessedTasks;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.MultipleCorrectors;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode.Regular;
-import de.thorstenberger.taskmodel.complex.complextaskdef.ComplexTaskDef.Config.CorrectionMode;
 import generated.*;
 
 public class Inputaufteiler {
@@ -49,7 +45,7 @@ public class Inputaufteiler {
 
 		// TODO METATAG der exportieren Moodleklausur nach "Autor" oder Author
 		// durchsuchen
-		revision.setAuthor("Christoph Jobst");
+		revision.setAuthor("Converterprogramming by Christoph Jobst");
 		revision.setDate(date.getTime());
 		revision.setSerialNumber(1);
 		revisions.getRevision().add(revision);
@@ -75,8 +71,8 @@ public class Inputaufteiler {
 						.equals("category")
 						&& quizsammlung.getQuestion().get(i).getCategory()
 								.getText().toString().startsWith("$course$")) {
-//					System.out.println(quizsammlung.getQuestion().get(i)
-//							.getCategory().getText().toString());
+					// System.out.println(quizsammlung.getQuestion().get(i)
+					// .getCategory().getText().toString());
 					startmarker = 9;
 
 				}
@@ -84,8 +80,8 @@ public class Inputaufteiler {
 						.equals("category")
 						&& !quizsammlung.getQuestion().get(i).getCategory()
 								.getText().toString().startsWith("$course$")) {
-//					System.out.println(quizsammlung.getQuestion().get(i)
-//							.getCategory().getText().toString());
+					// System.out.println(quizsammlung.getQuestion().get(i)
+					// .getCategory().getText().toString());
 					startmarker = 0;
 				}
 
@@ -200,21 +196,35 @@ public class Inputaufteiler {
 						if (questionType.equals("cloze")) {
 
 							Boolean casesensitivity = false;
-							if (!quizsammlung
-									.getQuestion().get(i).isCasesensitivity()) {
-								casesensitivity = !quizsammlung
-									.getQuestion().get(i).isCasesensitivity();
+							try {
+								if (!quizsammlung.getQuestion().get(i)
+										.isCasesensitivity()) {
+									casesensitivity = !quizsammlung
+											.getQuestion().get(i)
+											.isCasesensitivity();
+								}
+							} catch (NullPointerException e) {
+								System.out
+										.println("Probem bei Cloze Casesensitivity");
 							}
-							System.out.println(quizsammlung
-									.getQuestion().get(i).isCasesensitivity());
-								System.out.println(casesensitivity);
+
+							float penalty;
+							try {
+								penalty = Float.parseFloat(quizsammlung
+										.getQuestion().get(i).getPenalty());
+							} catch (Exception e) {
+								//Kein Penalty-Element vorhanden -> nimm Standard 1
+								penalty = 1;
+
+							}
 
 							categoryManagerList
 									.get(belongingCategoryIndex)
 									.setClozeTaskBlock(
 											ClozeToClozeConverter.processing(quizsammlung
 													.getQuestion().get(i)),
-											ClozeToClozeConverter.punktzahl,casesensitivity);
+											ClozeToClozeConverter.punktzahl,
+											casesensitivity, penalty);
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasClozeTaskBlock(true);
 						}
