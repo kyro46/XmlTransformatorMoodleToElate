@@ -246,7 +246,7 @@ public class CategoryManager {
 	}
 
 	public void setClozeTaskBlock(ClozeSubTaskDef clozeSubTaskDef,
-			float defaultgrade) {
+			float defaultgrade, Boolean casesensitivity) {
 
 		// Einfach alles nehmen und mit versch. Bepunktung etc. eintragen.
 		if (num_shown.equals("-1")) {
@@ -259,7 +259,8 @@ public class CategoryManager {
 			// Vorbereitung ClozeTaskBlock
 			clozeTaskBlock.setConfig(generalTaskBlockConfig);
 			ClozeConfig clozeConfig = new ClozeConfig();
-			clozeConfig.setIgnoreCase(true);
+			// TODO IgnoreCase aus Moodle beziehen
+			clozeConfig.setIgnoreCase(casesensitivity);
 			// TODO NegativePoints aus Moodle beziehen
 			clozeConfig.setNegativePoints(1);
 			clozeTaskBlock.setClozeConfig(clozeConfig);

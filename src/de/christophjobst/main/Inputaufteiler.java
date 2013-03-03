@@ -75,8 +75,8 @@ public class Inputaufteiler {
 						.equals("category")
 						&& quizsammlung.getQuestion().get(i).getCategory()
 								.getText().toString().startsWith("$course$")) {
-					System.out.println(quizsammlung.getQuestion().get(i)
-							.getCategory().getText().toString());
+//					System.out.println(quizsammlung.getQuestion().get(i)
+//							.getCategory().getText().toString());
 					startmarker = 9;
 
 				}
@@ -84,8 +84,8 @@ public class Inputaufteiler {
 						.equals("category")
 						&& !quizsammlung.getQuestion().get(i).getCategory()
 								.getText().toString().startsWith("$course$")) {
-					System.out.println(quizsammlung.getQuestion().get(i)
-							.getCategory().getText().toString());
+//					System.out.println(quizsammlung.getQuestion().get(i)
+//							.getCategory().getText().toString());
 					startmarker = 0;
 				}
 
@@ -199,12 +199,22 @@ public class Inputaufteiler {
 
 						if (questionType.equals("cloze")) {
 
+							Boolean casesensitivity = false;
+							if (!quizsammlung
+									.getQuestion().get(i).isCasesensitivity()) {
+								casesensitivity = !quizsammlung
+									.getQuestion().get(i).isCasesensitivity();
+							}
+							System.out.println(quizsammlung
+									.getQuestion().get(i).isCasesensitivity());
+								System.out.println(casesensitivity);
+
 							categoryManagerList
 									.get(belongingCategoryIndex)
 									.setClozeTaskBlock(
 											ClozeToClozeConverter.processing(quizsammlung
 													.getQuestion().get(i)),
-											ClozeToClozeConverter.punktzahl);
+											ClozeToClozeConverter.punktzahl,casesensitivity);
 							categoryManagerList.get(belongingCategoryIndex)
 									.setHasClozeTaskBlock(true);
 						}

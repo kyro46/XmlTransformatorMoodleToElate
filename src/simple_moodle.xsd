@@ -312,6 +312,9 @@
 							<xs:element name="initialtextfieldvalue"
 								type="xs:string">
 							</xs:element>
+							<xs:element name="casesensitivity"
+								type="xs:boolean">
+							</xs:element>
 						</xs:sequence>
 						<xs:attribute name="type" use="required">
 							<xs:simpleType>
