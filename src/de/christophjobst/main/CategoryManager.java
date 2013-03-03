@@ -45,8 +45,8 @@ public class CategoryManager {
 	TextTaskBlock textTaskBlock = new TextTaskBlock();
 	ClozeTaskBlock clozeTaskBlock = new ClozeTaskBlock();
 	AddonTaskBlock addonTaskBlock = new AddonTaskBlock();
-	String num_shown = "";
-	String tasktype = "";
+	String num_shown = "-1";
+	String tasktype = "default";
 
 	// Für Auswahlkategorien (-> Klausurplugin) zusätzlich Anzahl und Typ
 	// übernehmen

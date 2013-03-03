@@ -67,8 +67,9 @@ public class Inputaufteiler {
 		int startmarker = 9;
 		for (int i = 0; i < quizsammlung.getQuestion().toArray().length; i++) {
 			try {
-				
-				// Ist es ein Direktexport aus Moodle (fängt mit $course$ an) -> startmarke=9 oder aus dem
+
+				// Ist es ein Direktexport aus Moodle (fängt mit $course$ an) ->
+				// startmarke=9 oder aus dem
 				// Klausurplugin -> startmarke=0?
 				if (quizsammlung.getQuestion().get(i).getType().toString()
 						.equals("category")
@@ -78,36 +79,50 @@ public class Inputaufteiler {
 							.getCategory().getText().toString());
 					startmarker = 9;
 
-				} else {
+				}
+				if (quizsammlung.getQuestion().get(i).getType().toString()
+						.equals("category")
+						&& !quizsammlung.getQuestion().get(i).getCategory()
+								.getText().toString().startsWith("$course$")) {
+					System.out.println(quizsammlung.getQuestion().get(i)
+							.getCategory().getText().toString());
 					startmarker = 0;
-				}			
-				
+				}
+
 				if (quizsammlung.getQuestion().get(i).getType().toString()
 						.equals("category")
 						&& (!categoryNameList.contains(quizsammlung
 								.getQuestion().get(i).getCategory().getText()
 								.toString().substring(startmarker)))) {
 					categoryNameList.add(quizsammlung.getQuestion().get(i)
-							.getCategory().getText().toString().substring(startmarker));
-					
-					
+							.getCategory().getText().toString()
+							.substring(startmarker));
+
 					String type;
 					String num_shown;
 					try {
-						type = quizsammlung.getQuestion().get(i)
-										.getCategory().getType();
-								num_shown = quizsammlung.getQuestion().get(i)
-										.getCategory().getNumShown();
+						type = quizsammlung.getQuestion().get(i).getCategory()
+								.getType();
+						num_shown = quizsammlung.getQuestion().get(i)
+								.getCategory().getNumShown();
+
+						if (num_shown == null) {
+							num_shown = "-1";
+						}
+						if (type == null) {
+							type = "default";
+						}
+
 					} catch (Exception e) {
-						System.out.println("Keine Klausurpluginkonfig gefunden, nutze Standard");
 						type = "default";
 						num_shown = "-1";
-						
+
 					}
-					
+
 					categoryManagerList.add(new CategoryManager(
 							CategoryToCategoryConverter.processing(quizsammlung
-									.getQuestion().get(i), startmarker), num_shown , type));
+									.getQuestion().get(i), startmarker),
+							num_shown, type));
 				}
 
 			} catch (Exception e) {
@@ -159,8 +174,9 @@ public class Inputaufteiler {
 
 						if (questionType.equals("meta")) {
 							if (hasAExamConfigTask == false) {
-								complexTaskDef = MetaToConfigConverter.processing(quizsammlung
-										.getQuestion().get(i));
+								complexTaskDef = MetaToConfigConverter
+										.processing(quizsammlung.getQuestion()
+												.get(i));
 								hasAExamConfigTask = true;
 							} else {
 								System.err
@@ -298,7 +314,7 @@ public class Inputaufteiler {
 		// Kein meta-Element zur Klausurdefinition? Defaultvorgaben:
 		if (hasAExamConfigTask == false) {
 			System.err
-			.println("Keine Klausurkonfigurationen vorhanden. Es werden Platzhalter eingesetzt.");
+					.println("Keine Klausurkonfigurationen vorhanden. Es werden Platzhalter eingesetzt.");
 			complexTaskDef = MetaToConfigConverter.setDefault();
 		}
 
