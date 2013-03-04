@@ -168,10 +168,9 @@ public class CategoryManager {
 
 			mcTaskBlock.setConfig(generalTaskBlockConfig);
 			McConfig mcConfig = new McConfig();
-			
+
 			if (assessmentmode) {
 				Different different = new Different();
-				// TODO NegativePoints aus Moodle beziehen
 				different.setCorrectAnswerNegativePoints(penaltyEmpty);
 				different.setIncorrectAnswerNegativePoints(penaltyWrong);
 				mcConfig.setDifferent(different);
@@ -200,11 +199,16 @@ public class CategoryManager {
 
 				mcTaskBlock.setConfig(generalTaskBlockConfig);
 				McConfig mcConfig = new McConfig();
-				Different different = new Different();
-				// TODO NegativePoints aus Moodle beziehen
-				different.setCorrectAnswerNegativePoints(1);
-				different.setIncorrectAnswerNegativePoints(0);
-				mcConfig.setDifferent(different);
+				if (assessmentmode) {
+					Different different = new Different();
+					different.setCorrectAnswerNegativePoints(penaltyEmpty);
+					different.setIncorrectAnswerNegativePoints(penaltyWrong);
+					mcConfig.setDifferent(different);
+				} else {
+					Regular regular = new Regular();
+					regular.setNegativePoints(penalty);
+					mcConfig.setRegular(regular);
+				}
 				mcTaskBlock.setMcConfig(mcConfig);
 
 				mcTaskBlock.getMcSubTaskDefOrChoice().add(mcSubTaskDef);
