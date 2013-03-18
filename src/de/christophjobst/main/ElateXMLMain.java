@@ -7,7 +7,6 @@
  * 
  * TODO Mehrere Schachtelungsebenen für Category übernehmen, sobald complexTaskDef.xsd unterstützt
  * TODO Bilder als Datei abspeichern
- * TODO Negative Points for Mapping and MC in CategoryManager
  */
 
 package de.christophjobst.main;
@@ -67,7 +66,6 @@ public class ElateXMLMain {
 
 		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
 
-		
 		// Ausgabe des generierten XML
 		// System.out.println("Output from XML File: ");
 		m_complexTaskDef.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT,
