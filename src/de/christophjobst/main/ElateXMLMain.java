@@ -5,8 +5,8 @@
  * @author Christoph Jobst
  * @version 1.0
  * 
- * TODO Mehrere Schachtelungsebenen für Category übernehmen, sobald complexTaskDef.xsd unterstützt
- * TODO Bilder als Datei abspeichern
+ * TODO Mehrere Schachtelungsebenen für Category übernehmen, falls von complexTaskDef.xsd unterstützt
+ * TODO Bilder in RTyp-Memento und SpeechTestTask-Memento auch als Datei abspeichern
  */
 
 package de.christophjobst.main;
@@ -31,7 +31,9 @@ import javax.xml.bind.Unmarshaller;
 public class ElateXMLMain {
 
 	// Debug: Pfad zur Moodle-XML-Datei explizit angeben.
-	private static final String QUIZ_XML = "./small.xml";
+	private static final String QUIZ_XML = "./file1.xml";
+	private static final String QUIZ_XML_2 = "./file2.xml";
+
 	private static final String COMPLEXTASKDEF_XML = "./complexTaskDef.xml";
 
 	public static void main(String[] args) throws JAXBException, IOException {
@@ -43,7 +45,10 @@ public class ElateXMLMain {
 		// JAXB Context für Moodle-Quiz
 		JAXBContext context_quiz = JAXBContext.newInstance(Quiz.class);
 		Unmarshaller um_quiz = context_quiz.createUnmarshaller();
+		
+		//provide two quiz-files to detect lingering data in tests
 		Quiz quizsammlung = (Quiz) um_quiz.unmarshal(new FileReader(QUIZ_XML));
+		Quiz quizsammlung_2 = (Quiz) um_quiz.unmarshal(new FileReader(QUIZ_XML_2));
 
 		// Quiz quizsammlung = (Quiz) um_quiz.unmarshal(new
 		// ByteArrayInputStream(input.getBytes()));
@@ -62,9 +67,10 @@ public class ElateXMLMain {
 		// DebuggingAusgabe.printExistingComplexTaskDefCategoryblocks(complexTaskDef);
 
 		ComplexTaskDef complexTaskDef = new ComplexTaskDef();
+
+		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung_2);
 		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
 
-		complexTaskDef = Inputaufteiler.inputAufteilen(quizsammlung);
 
 		// Ausgabe des generierten XML
 		// System.out.println("Output from XML File: ");
